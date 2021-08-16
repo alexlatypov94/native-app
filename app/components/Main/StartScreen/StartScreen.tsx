@@ -1,16 +1,18 @@
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Dimensions} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {SCREENS} from '../../constants/constants';
+import {UserStackParamsList} from '../../interface';
 
 export const StartScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NavigationProp<UserStackParamsList, SCREENS.photos>>();
 
   const handleNavigation = () => {
-    navigation.navigate(SCREENS.photos as never);
+    navigation.navigate(SCREENS.photos);
   };
 
   return (

@@ -9,6 +9,18 @@ import {getPhotos} from '../../utils/getPhotos';
 import {Dimensions} from 'react-native';
 import {PHOTO_HEIGHT} from '../../constants/constants';
 
+const image = ({item, index}: any) => {
+  const photoHeight = (i: number) => {
+    return i % 2 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
+  };
+  return (
+    <Image
+      style={styles.imgStyle}
+      source={{uri: item?.urls?.regular, height: photoHeight(index)}}
+    />
+  );
+};
+
 export const PhotoScreen: React.FC = () => {
   const [photos, setPhotos] = useState<IApiData[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
@@ -26,18 +38,6 @@ export const PhotoScreen: React.FC = () => {
         setIsError(true);
       });
   }, []);
-
-  const image = ({item, index}: any) => {
-    const photoHeight = (i: number) => {
-      return i % 2 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
-    };
-    return (
-      <Image
-        style={styles.imgStyle}
-        source={{uri: item?.urls?.regular, height: photoHeight(index)}}
-      />
-    );
-  };
 
   const renderPic = () => {
     return (

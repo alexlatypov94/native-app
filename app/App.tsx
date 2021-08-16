@@ -10,15 +10,19 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {Footer} from './components/Footer/Footer';
+import {UserMenu} from './components/UserMenu/UserMenu';
 import {Header} from './components/Header/Header';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+// import {createStackNavigator} from '@react-navigation/stack';
 import {StartScreen} from './components/Main/StartScreen/StartScreen';
 import {PhotoScreen} from './components/Main/PhotoScreen/PhotoScreen';
 import {SCREENS} from './components/constants/constants';
+import {SettingsScreen} from './components/Main/SettingsScreen/SettingsScreen';
+import {ProfileScreen} from './components/Main/ProfileScreen/ProfileScreen';
+import {UserStackParamsList} from './components/interface';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator<UserStackParamsList>();
 
 const App = () => {
   return (
@@ -26,12 +30,24 @@ const App = () => {
       <SafeAreaView style={styles.wrapper}>
         <Header />
         <View style={styles.main}>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name={SCREENS.start} component={StartScreen} />
-            <Stack.Screen name={SCREENS.photos} component={PhotoScreen} />
-          </Stack.Navigator>
+          <Drawer.Navigator
+            initialRouteName={SCREENS.start}
+            screenOptions={{
+              headerShown: false,
+              drawerStyle: {
+                backgroundColor: '#1b2122',
+              },
+              drawerLabelStyle: {
+                color: '#fff',
+              },
+            }}>
+            <Drawer.Screen name={SCREENS.start} component={StartScreen} />
+            <Drawer.Screen name={SCREENS.photos} component={PhotoScreen} />
+            <Drawer.Screen name={SCREENS.settings} component={SettingsScreen} />
+            <Drawer.Screen name={SCREENS.profile} component={ProfileScreen} />
+          </Drawer.Navigator>
         </View>
-        <Footer />
+        <UserMenu />
       </SafeAreaView>
     </NavigationContainer>
   );

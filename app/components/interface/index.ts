@@ -1,3 +1,4 @@
+import {SCREENS} from './../constants/constants';
 export interface IApiData {
   alt_description: string;
   blur_hash: string;
@@ -107,3 +108,10 @@ interface IUser {
   updated_at: string | null;
   username: string | null;
 }
+
+export type UserStackParamsList = {
+  [SCREENS.start]: undefined;
+  [SCREENS.photos]: undefined;
+  [SCREENS.settings]: undefined;
+  [SCREENS.profile]: undefined;
+};
