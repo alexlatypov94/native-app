@@ -16,6 +16,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {StartScreen} from './components/Main/StartScreen/StartScreen';
 import {PhotoScreen} from './components/Main/PhotoScreen/PhotoScreen';
+import {SCREENS} from './components/constants/constants';
 
 const Stack = createStackNavigator();
 
@@ -26,8 +27,8 @@ const App = () => {
         <Header />
         <View style={styles.main}>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Start" component={StartScreen} />
-            <Stack.Screen name="Photos" component={PhotoScreen} />
+            <Stack.Screen name={SCREENS.start} component={StartScreen} />
+            <Stack.Screen name={SCREENS.photos} component={PhotoScreen} />
           </Stack.Navigator>
         </View>
         <Footer />

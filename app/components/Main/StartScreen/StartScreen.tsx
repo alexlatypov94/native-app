@@ -1,19 +1,24 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Dimensions} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {SCREENS} from '../../constants/constants';
 
-interface INavProps {
-  navigation: any;
-}
+export const StartScreen: React.FC = () => {
+  const navigation = useNavigation();
 
-export const StartScreen: React.FC<INavProps> = ({navigation}) => {
+  const handleNavigation = () => {
+    navigation.navigate(SCREENS.photos as never);
+  };
+
   return (
     <View style={styles.startWrapper}>
-      <TouchableWithoutFeedback onPress={() => navigation.navigate('Photos')}>
+      <TouchableWithoutFeedback onPress={handleNavigation}>
         <View style={styles.buttonStyle}>
           <Text style={styles.buttonTextStyle}>Welcome</Text>
+          <View style={styles.roundWave} />
         </View>
       </TouchableWithoutFeedback>
     </View>
@@ -27,19 +32,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#1F2126',
   },
-  startMessage: {
-    fontSize: 40,
-    fontWeight: 'bold',
-  },
   buttonStyle: {
-    width: Dimensions.get('window').width / 2,
-    height: Dimensions.get('window').width / 2,
-    borderRadius: Dimensions.get('window').width / 4,
-    backgroundColor: 'red',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonTextStyle: {
+    position: 'relative',
+    zIndex: 1,
     textAlign: 'center',
     color: '#fff',
     fontSize: 40,
+  },
+  roundWave: {
+    position: 'absolute',
+    zIndex: 0,
+    width: 50,
+    height: 50,
+    backgroundColor: '#595C62',
+    borderRadius: 50,
   },
 });

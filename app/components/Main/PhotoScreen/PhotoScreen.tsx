@@ -1,12 +1,13 @@
 import React from 'react';
 import {useEffect} from 'react';
 import {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {Image} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {FlatList} from 'react-native-gesture-handler';
 import {IApiData} from '../../interface';
 import {getPhotos} from '../../utils/getPhotos';
 import {Dimensions} from 'react-native';
+import {PHOTO_HEIGHT} from '../../constants/constants';
 
 export const PhotoScreen: React.FC = () => {
   const [photos, setPhotos] = useState<IApiData[]>([]);
@@ -17,6 +18,7 @@ export const PhotoScreen: React.FC = () => {
     getPhotos()
       .then(res => {
         setPhotos(res);
+
         setIsLoading(true);
       })
       .catch(error => {
@@ -25,28 +27,43 @@ export const PhotoScreen: React.FC = () => {
       });
   }, []);
 
-  const renderPic = (isOdd: boolean) => {
-    const sortedPic = isOdd
-      ? photos.filter((el, i) => i % 2 === 0)
-      : photos.filter((el, i) => i % 2 !== 0);
-    return sortedPic.map(el => {
-      return (
-        <Image
-          key={el.id}
-          style={styles.imgStyle}
-          source={{uri: el.urls.regular, height: isOdd ? 140 : 170}}
-        />
-      );
-    });
+  const image = ({item, index}: any) => {
+    const photoHeight = (i: number) => {
+      return i % 2 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
+    };
+    return (
+      <Image
+        style={styles.imgStyle}
+        source={{uri: item?.urls?.regular, height: photoHeight(index)}}
+      />
+    );
   };
 
+  const renderPic = () => {
+    return (
+      <FlatList
+        data={photos}
+        renderItem={image}
+        keyExtractor={i => i.id}
+        numColumns={2}
+      />
+    );
+  };
+
+  const renderView = (
+    <View style={styles.scrollWrapper}>
+      <View style={styles.leftSide}>{renderPic()}</View>
+    </View>
+  );
+
   return !isError ? (
-    <ScrollView>
-      <View style={styles.scrollWrapper}>
-        <View style={styles.leftSide}>{renderPic(true)}</View>
-        <View style={styles.rightSide}>{renderPic(false)}</View>
+    isLoading ? (
+      renderView
+    ) : (
+      <View style={styles.indicatorWrapper}>
+        <ActivityIndicator size="large" color="#00ff00" />
       </View>
-    </ScrollView>
+    )
   ) : (
     <View>
       <Text>Some Error</Text>
@@ -56,27 +73,23 @@ export const PhotoScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   scrollWrapper: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
+    width: Dimensions.get('window').width,
     backgroundColor: '#1F2126',
-    paddingLeft: 10,
-    paddingRight: 10,
   },
   imgStyle: {
     width: Dimensions.get('window').width / 2.5,
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  imgStyleLeft: {
-    height: 100,
+    margin: 15,
   },
 
-  imgStyleRight: {
-    height: 150,
+  leftSide: {
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
   },
 
-  leftSide: {},
-  rightSide: {},
+  indicatorWrapper: {
+    backgroundColor: '#1F2126',
+    flex: 1,
+    justifyContent: 'center',
+  },
 });
