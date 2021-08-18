@@ -1,24 +1,29 @@
 import React from 'react';
-import {useState} from 'react';
+import {useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
 import {Switch} from 'react-native-gesture-handler';
+import {ThemeContext} from '../../context/ThemeContext';
 
 export const SettingsScreen: React.FC = () => {
-  const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const toggleSwitch = () => {
-    setIsEnabled(previousState => !previousState);
+  const {colors, isDark, setColorScheme} = useContext(ThemeContext);
+
+  const toggleSwitch = (isTrue: boolean) => {
+    setColorScheme(isTrue ? 'dark' : 'light');
   };
+
   return (
-    <View style={styles.settingsWrapper}>
-      <Text style={styles.settingsTitle}>Settings</Text>
+    <View
+      style={[styles.settingsWrapper, {backgroundColor: colors.background}]}>
+      <Text style={[styles.settingsTitle, {color: colors.text}]}>Settings</Text>
       <View style={styles.settingsItem}>
-        <Text style={styles.changeThemeTitle}>Change theme</Text>
+        <Text style={[styles.changeThemeTitle, {color: colors.text}]}>
+          Change theme
+        </Text>
         <Switch
-          trackColor={{false: '#fff', true: '#000'}}
-          thumbColor={isEnabled ? '#fff' : '#1b66ac'}
+          thumbColor={colors.thumb}
           onValueChange={toggleSwitch}
-          value={isEnabled}
+          value={isDark}
         />
       </View>
     </View>
@@ -28,13 +33,11 @@ export const SettingsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   settingsWrapper: {
     flex: 1,
-    backgroundColor: '#1F2126',
     alignItems: 'center',
     justifyContent: 'center',
   },
   settingsTitle: {
     fontSize: 30,
-    color: '#fff',
     marginBottom: 30,
   },
   settingsItem: {
@@ -45,6 +48,5 @@ const styles = StyleSheet.create({
   },
   changeThemeTitle: {
     fontSize: 20,
-    color: '#fff',
   },
 });

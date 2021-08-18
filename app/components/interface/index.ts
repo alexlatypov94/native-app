@@ -109,9 +109,11 @@ interface IUser {
   username: string | null;
 }
 
-export type UserStackParamsList = {
+export type UserDrawerParamsList = {
   [SCREENS.start]: undefined;
   [SCREENS.photos]: undefined;
   [SCREENS.settings]: undefined;
   [SCREENS.profile]: undefined;
+  [SCREENS.auth]: undefined;
+  [SCREENS.signup]: undefined;
 };

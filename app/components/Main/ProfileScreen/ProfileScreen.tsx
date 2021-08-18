@@ -1,15 +1,22 @@
 import React from 'react';
+import {useContext} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {UserSvg} from '../../../assets/svg';
 import {USER} from '../../constants/constants';
+import {ThemeContext} from '../../context/ThemeContext';
 
 export const ProfileScreen: React.FC = () => {
+  const {colors} = useContext(ThemeContext);
   return (
-    <View style={styles.profileWrapper}>
-      <Text style={styles.profileTitle}>My Profile</Text>
+    <View style={[styles.profileWrapper, {backgroundColor: colors.background}]}>
+      <Text style={[styles.profileTitle, {color: colors.text}]}>
+        My Profile
+      </Text>
       <UserSvg />
-      <Text style={styles.userName}>{USER.name}</Text>
-      <Text style={styles.userName}>{USER.surname}</Text>
+      <Text style={[styles.userName, {color: colors.text}]}>{USER.name}</Text>
+      <Text style={[styles.userName, {color: colors.text}]}>
+        {USER.surname}
+      </Text>
     </View>
   );
 };
@@ -17,18 +24,15 @@ export const ProfileScreen: React.FC = () => {
 const styles = StyleSheet.create({
   profileWrapper: {
     flex: 1,
-    backgroundColor: '#1F2126',
     alignItems: 'center',
     justifyContent: 'center',
   },
   userName: {
     fontSize: 24,
-    color: '#fff',
     marginTop: 20,
   },
   profileTitle: {
     fontSize: 30,
-    color: '#fff',
     marginBottom: 20,
   },
 });

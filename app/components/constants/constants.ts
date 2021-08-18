@@ -1,3 +1,4 @@
+import {IUserMenuItem} from './interfaces';
 import {HomeSvg} from './../../assets/svg/HomeSvg';
 import {GallerySvg} from './../../assets/svg/GallerySvg';
 import {AvatarSvg} from './../../assets/svg/AvatarSvg';
@@ -8,8 +9,10 @@ import {FilterSvg} from './../../assets/svg/FilterSvg';
 export enum SCREENS {
   start = 'Start',
   photos = 'Photos',
-  settings = 'Settings',
   profile = 'Profile',
+  settings = 'Settings',
+  auth = 'Authorization',
+  signup = 'Registration',
 }
 
 export const PHOTO_HEIGHT = {
@@ -17,12 +20,31 @@ export const PHOTO_HEIGHT = {
   large: 170,
 };
 
-export const USER_MENU_ITEMS = {
-  start: HomeSvg,
-  photos: GallerySvg,
-  profile: AvatarSvg,
-  settings: SettingsSvg,
-};
+export const USER_MENU_ITEMS: Array<IUserMenuItem> = [
+  {
+    screen: SCREENS.start,
+    icon: HomeSvg,
+  },
+  {
+    screen: SCREENS.photos,
+    icon: GallerySvg,
+  },
+  {
+    screen: SCREENS.profile,
+    icon: AvatarSvg,
+  },
+  {
+    screen: SCREENS.settings,
+    icon: SettingsSvg,
+  },
+];
+
+// export const USER_MENU_ITEMS = {
+//   start: HomeSvg,
+//   photos: GallerySvg,
+//   profile: AvatarSvg,
+//   settings: SettingsSvg,
+// };
 
 export const HEADER_ITEMS = {
   menu: MenuSvg,

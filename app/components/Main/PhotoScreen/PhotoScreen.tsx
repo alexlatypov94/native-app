@@ -1,30 +1,52 @@
-import React from 'react';
-import {useEffect} from 'react';
-import {useState} from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import {Image} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  LogBox,
+} from 'react-native';
 import {IApiData} from '../../interface';
 import {getPhotos} from '../../utils/getPhotos';
 import {Dimensions} from 'react-native';
 import {PHOTO_HEIGHT} from '../../constants/constants';
+import {useContext} from 'react';
+import {ThemeContext} from '../../context/ThemeContext';
+import {MyScrollView} from '../../MyScrollView/MyScrollView';
 
-const image = ({item, index}: any) => {
-  const photoHeight = (i: number) => {
-    return i % 2 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
-  };
+const wait = (timeout: number) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
+const image = ({item}: {item: IApiData}, isOddColumn: boolean) => {
   return (
     <Image
       style={styles.imgStyle}
-      source={{uri: item?.urls?.regular, height: photoHeight(index)}}
+      source={{
+        uri: item?.urls?.regular,
+        height: isOddColumn ? PHOTO_HEIGHT.small : PHOTO_HEIGHT.large,
+      }}
     />
   );
 };
 
 export const PhotoScreen: React.FC = () => {
+  LogBox.ignoreAllLogs();
   const [photos, setPhotos] = useState<IApiData[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const {colors} = useContext(ThemeContext);
+
+  const onRefresh = useCallback(() => {
+    setIsRefreshing(true);
+    wait(2000).then(() => {
+      setIsRefreshing(false);
+    });
+  }, []);
 
   useEffect(() => {
     getPhotos()
@@ -39,28 +61,38 @@ export const PhotoScreen: React.FC = () => {
       });
   }, []);
 
-  const renderPic = () => {
+  const renderPic = (isOddColumn: boolean, id: string) => {
+    const filteredPhotoArr = isOddColumn
+      ? photos.filter((el, index) => index % 2 === 0)
+      : photos.filter((el, index) => index % 2 !== 0);
+
     return (
       <FlatList
-        data={photos}
-        renderItem={image}
+        data={filteredPhotoArr}
+        renderItem={item => image(item, isOddColumn)}
         keyExtractor={i => i.id}
-        numColumns={2}
+        scrollEnabled={false}
+        listKey={id}
       />
     );
   };
 
   const renderView = (
-    <View style={styles.scrollWrapper}>
-      <View style={styles.leftSide}>{renderPic()}</View>
-    </View>
+    <MyScrollView isRefreshing={isRefreshing} onRefresh={onRefresh}>
+      <View
+        style={[styles.scrollWrapper, {backgroundColor: colors.background}]}>
+        <View style={styles.firstColumn}>{renderPic(true, 'first')}</View>
+        <View style={styles.secondColumn}>{renderPic(false, 'second')}</View>
+      </View>
+    </MyScrollView>
   );
 
   return !isError ? (
     isLoading ? (
       renderView
     ) : (
-      <View style={styles.indicatorWrapper}>
+      <View
+        style={[styles.indicatorWrapper, {backgroundColor: colors.background}]}>
         <ActivityIndicator size="large" color="#00ff00" />
       </View>
     )
@@ -73,22 +105,28 @@ export const PhotoScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   scrollWrapper: {
+    position: 'relative',
     width: Dimensions.get('window').width,
-    backgroundColor: '#1F2126',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   imgStyle: {
     width: Dimensions.get('window').width / 2.5,
     borderRadius: 10,
-    margin: 15,
+    margin: 10,
   },
 
-  leftSide: {
-    width: Dimensions.get('window').width,
+  firstColumn: {
+    width: Dimensions.get('window').width / 2,
+    position: 'relative',
+    alignItems: 'center',
+  },
+  secondColumn: {
+    width: Dimensions.get('window').width / 2,
     alignItems: 'center',
   },
 
   indicatorWrapper: {
-    backgroundColor: '#1F2126',
     flex: 1,
     justifyContent: 'center',
   },

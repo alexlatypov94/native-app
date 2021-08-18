@@ -8,46 +8,93 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {Appearance, SafeAreaView, StyleSheet, View} from 'react-native';
 import {UserMenu} from './components/UserMenu/UserMenu';
 import {Header} from './components/Header/Header';
 import {NavigationContainer} from '@react-navigation/native';
-// import {createStackNavigator} from '@react-navigation/stack';
 import {StartScreen} from './components/Main/StartScreen/StartScreen';
 import {PhotoScreen} from './components/Main/PhotoScreen/PhotoScreen';
 import {SCREENS} from './components/constants/constants';
 import {SettingsScreen} from './components/Main/SettingsScreen/SettingsScreen';
 import {ProfileScreen} from './components/Main/ProfileScreen/ProfileScreen';
-import {UserStackParamsList} from './components/interface';
+import {UserDrawerParamsList} from './components/interface';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {ModalWindow} from './components/ModalWindow/ModalWindow';
+import {createStackNavigator} from '@react-navigation/stack';
+import {
+  DARK_COLORS,
+  LIGHT_COLORS,
+  ThemeContext,
+} from './components/context/ThemeContext';
+import {AuthPage} from './components/AuthPage.tsx/AuthPage';
+import {RegistrationPage} from './components/RegistrationPage/RegistrationPage';
 
-const Drawer = createDrawerNavigator<UserStackParamsList>();
+const Drawer = createDrawerNavigator<UserDrawerParamsList>();
+const Stack = createStackNavigator();
 
 const App = () => {
-  return (
+  const [isVisible, setIsVisible] = useState(false);
+
+  const [isAuth, setIsAuth] = useState(false);
+
+  const handleModalVisible = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const colorScheme = Appearance.getColorScheme();
+
+  const [isDark, setIsDark] = useState(colorScheme === 'dark');
+
+  const defaultTheme = {
+    isDark,
+    colors: isDark ? DARK_COLORS : LIGHT_COLORS,
+    setColorScheme: (scheme: string) => setIsDark(scheme === 'dark'),
+  };
+
+  return isAuth ? (
+    <ThemeContext.Provider value={defaultTheme}>
+      <NavigationContainer>
+        <SafeAreaView style={styles.wrapper}>
+          <Header onChangeVisible={handleModalVisible} />
+          <View style={styles.main}>
+            <ModalWindow
+              isVisible={isVisible}
+              onChangeVisible={handleModalVisible}
+            />
+            <Drawer.Navigator
+              initialRouteName={SCREENS.start}
+              screenOptions={{
+                headerShown: false,
+                drawerStyle: {
+                  backgroundColor: isDark
+                    ? DARK_COLORS.background
+                    : LIGHT_COLORS.background,
+                },
+                drawerLabelStyle: {
+                  color: isDark ? DARK_COLORS.text : LIGHT_COLORS.text,
+                },
+              }}>
+              <Drawer.Screen name={SCREENS.start} component={StartScreen} />
+              <Drawer.Screen name={SCREENS.photos} component={PhotoScreen} />
+              <Drawer.Screen name={SCREENS.profile} component={ProfileScreen} />
+              <Drawer.Screen
+                name={SCREENS.settings}
+                component={SettingsScreen}
+              />
+            </Drawer.Navigator>
+          </View>
+          <UserMenu />
+        </SafeAreaView>
+      </NavigationContainer>
+    </ThemeContext.Provider>
+  ) : (
     <NavigationContainer>
       <SafeAreaView style={styles.wrapper}>
-        <Header />
-        <View style={styles.main}>
-          <Drawer.Navigator
-            initialRouteName={SCREENS.start}
-            screenOptions={{
-              headerShown: false,
-              drawerStyle: {
-                backgroundColor: '#1b2122',
-              },
-              drawerLabelStyle: {
-                color: '#fff',
-              },
-            }}>
-            <Drawer.Screen name={SCREENS.start} component={StartScreen} />
-            <Drawer.Screen name={SCREENS.photos} component={PhotoScreen} />
-            <Drawer.Screen name={SCREENS.settings} component={SettingsScreen} />
-            <Drawer.Screen name={SCREENS.profile} component={ProfileScreen} />
-          </Drawer.Navigator>
-        </View>
-        <UserMenu />
+        <Stack.Navigator initialRouteName={SCREENS.auth}>
+          <Stack.Screen name={SCREENS.auth} component={AuthPage} />
+          <Stack.Screen name={SCREENS.signup} component={RegistrationPage} />
+        </Stack.Navigator>
       </SafeAreaView>
     </NavigationContainer>
   );

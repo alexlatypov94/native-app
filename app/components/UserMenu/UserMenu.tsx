@@ -1,37 +1,40 @@
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {useContext} from 'react';
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {SCREENS, USER_MENU_ITEMS} from '../constants/constants';
-import {getKeyValue} from '../utils/getKeyValue';
+import {IUserMenuItem} from '../constants/interfaces';
+import {ThemeContext} from '../context/ThemeContext';
+import {UserDrawerParamsList} from '../interface';
 
 export const UserMenu: React.FC = () => {
-  const userItemsToArray = Object.entries(USER_MENU_ITEMS);
-  const navigations = useNavigation();
+  const navigations =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
   const handlePress = (screenName: string) => {
-    const value = getKeyValue(SCREENS, screenName);
-    navigations.navigate(value as never);
+    navigations.navigate(screenName);
   };
 
-  const renderUserItems = ({item}: any) => {
-    const [screenRef, itemSvg] = item;
+  const {colors} = useContext(ThemeContext);
+
+  const renderUserItems = ({item}: {item: IUserMenuItem}) => {
     return (
       <TouchableHighlight
         underlayColor="#c7c7c74b"
-        onPress={() => handlePress(screenRef)}
+        onPress={() => handlePress(item.screen)}
         style={styles.touchableRadius}>
-        <View style={styles.userBtnStyles}>{itemSvg()}</View>
+        <View style={styles.userBtnStyles}>{item.icon()}</View>
       </TouchableHighlight>
     );
   };
 
   return (
-    <View style={styles.footer}>
+    <View style={[styles.footer, {backgroundColor: colors.background}]}>
       <FlatList
         contentContainerStyle={styles.flatListStyles}
         horizontal={true}
-        data={userItemsToArray}
-        keyExtractor={i => i}
+        data={USER_MENU_ITEMS}
+        keyExtractor={i => i.screen}
         renderItem={renderUserItems}
       />
     </View>
@@ -41,7 +44,6 @@ export const UserMenu: React.FC = () => {
 const styles = StyleSheet.create({
   footer: {
     flex: 2,
-    backgroundColor: '#1F2126',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',

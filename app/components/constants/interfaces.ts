@@ -6,5 +6,10 @@ export interface IScreens extends IScreensObjectKeys {
 }
 
 interface IScreensObjectKeys {
-  [key: string]: string;
+  [key: string]: string | undefined;
+}
+
+export interface IUserMenuItem {
+  screen: string;
+  icon: Function;
 }

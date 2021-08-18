@@ -4,11 +4,21 @@ import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {FlatList} from 'react-native-gesture-handler';
 import {HEADER_ITEMS} from '../constants/constants';
+import {useContext} from 'react';
+import {ThemeContext} from '../context/ThemeContext';
 
-export const Header: React.FC = () => {
+interface IHeaderProp {
+  onChangeVisible: () => void;
+}
+
+export const Header: React.FC<IHeaderProp> = ({
+  onChangeVisible,
+}: IHeaderProp) => {
   const headerItems = Object.entries(HEADER_ITEMS);
   const navigations = useNavigation();
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false);
+
+  const {colors} = useContext(ThemeContext);
 
   const handlePress = (screenName: string) => {
     if (screenName === 'menu') {
@@ -16,6 +26,9 @@ export const Header: React.FC = () => {
       return isOpenDrawer
         ? navigations.dispatch(DrawerActions.closeDrawer())
         : navigations.dispatch(DrawerActions.openDrawer());
+    }
+    if (screenName === 'filter') {
+      onChangeVisible();
     }
   };
 
@@ -30,11 +43,12 @@ export const Header: React.FC = () => {
         <View style={styles.userBtnStyles}>{itemSvg()}</View>
       </TouchableHighlight>
     ) : (
-      <Text style={styles.headerText}>{itemSvg}</Text>
+      <Text style={[styles.headerText, {color: colors.text}]}>{itemSvg}</Text>
     );
   };
+
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, {backgroundColor: colors.background}]}>
       <FlatList
         contentContainerStyle={styles.flatListStyles}
         horizontal={true}
@@ -48,15 +62,13 @@ export const Header: React.FC = () => {
 
 const styles = StyleSheet.create({
   header: {
-    flex: 1,
-    backgroundColor: '#1F2126',
+    flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 15,
+    paddingHorizontal: 10,
   },
   headerText: {
-    color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
   },
