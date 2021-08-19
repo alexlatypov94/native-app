@@ -12,7 +12,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {SCREENS} from '../../constants/constants';
 import {useInput} from '../../hooks';
 import {UserDrawerParamsList} from '../../interface';
-import {emailValidator} from '../../utils/index';
+import {emailValidator, signIn} from '../../utils/index';
 
 interface IAuthProp {
   oNClickAuth: () => void;
@@ -31,7 +31,7 @@ export const AuthPage: React.FC<IAuthProp> = React.memo(
     const handlePress = () => {
       const checkEmail = emailValidator(email.value);
       if (checkEmail) {
-        console.log('valid');
+        signIn(email.value, password.value);
       } else {
         setInValidEmail(true);
       }
