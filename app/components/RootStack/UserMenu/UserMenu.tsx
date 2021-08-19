@@ -3,10 +3,10 @@ import React from 'react';
 import {useContext} from 'react';
 import {StyleSheet, TouchableHighlight, View} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {SCREENS, USER_MENU_ITEMS} from '../constants/constants';
-import {IUserMenuItem} from '../constants/interfaces';
-import {ThemeContext} from '../context/ThemeContext';
-import {UserDrawerParamsList} from '../interface';
+import {SCREENS, USER_MENU_ITEMS} from '../../constants/constants';
+import {IUserMenuItem} from '../../constants/interfaces';
+import {ThemeContext} from '../../context/ThemeContext';
+import {UserDrawerParamsList} from '../../interface';
 
 export const UserMenu: React.FC = () => {
   const navigations =

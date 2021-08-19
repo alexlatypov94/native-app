@@ -1,9 +1,9 @@
 import React from 'react';
 import {useContext} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {UserSvg} from '../../../assets/svg';
-import {USER} from '../../constants/constants';
-import {ThemeContext} from '../../context/ThemeContext';
+import {UserSvg} from '../../../../assets/svg';
+import {USER} from '../../../constants/constants';
+import {ThemeContext} from '../../../context/ThemeContext';
 
 export const ProfileScreen: React.FC = () => {
   const {colors} = useContext(ThemeContext);

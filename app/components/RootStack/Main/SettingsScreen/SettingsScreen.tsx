@@ -3,7 +3,7 @@ import {useContext} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
 import {Switch} from 'react-native-gesture-handler';
-import {ThemeContext} from '../../context/ThemeContext';
+import {ThemeContext} from '../../../context/ThemeContext';
 
 export const SettingsScreen: React.FC = () => {
   const {colors, isDark, setColorScheme} = useContext(ThemeContext);

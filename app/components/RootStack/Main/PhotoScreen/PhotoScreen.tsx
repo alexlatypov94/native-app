@@ -8,11 +8,11 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import {IApiData} from '../../interface';
-import {getPhotos} from '../../utils/index';
-import {PHOTO_HEIGHT} from '../../constants/constants';
-import {ThemeContext} from '../../context/ThemeContext';
-import {MyScrollView} from '../../MyScrollView/MyScrollView';
+import {IApiData} from '../../../interface';
+import {getPhotos} from '../../../utils/index';
+import {PHOTO_HEIGHT} from '../../../constants/constants';
+import {ThemeContext} from '../../../context/ThemeContext';
+import {MyScrollView} from '../../../MyScrollView/MyScrollView';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));

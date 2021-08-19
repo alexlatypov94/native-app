@@ -3,7 +3,7 @@ import {useContext} from 'react';
 import {useState} from 'react';
 import {Modal, StyleSheet, View, Text, Pressable} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-import {ThemeContext} from '../context/ThemeContext';
+import {ThemeContext} from '../../context/ThemeContext';
 
 interface IModalProp {
   isVisible: boolean;

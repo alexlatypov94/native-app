@@ -65,7 +65,6 @@ export const Header: React.FC<IHeaderProp> = ({
 
 const styles = StyleSheet.create({
   header: {
-    flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

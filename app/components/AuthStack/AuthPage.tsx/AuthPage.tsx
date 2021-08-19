@@ -9,10 +9,10 @@ import {
   TextInput,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {SCREENS} from '../constants/constants';
-import {useInput} from '../hooks';
-import {UserDrawerParamsList} from '../interface';
-import {emailValidator} from '../utils/index';
+import {SCREENS} from '../../constants/constants';
+import {useInput} from '../../hooks';
+import {UserDrawerParamsList} from '../../interface';
+import {emailValidator} from '../../utils/index';
 
 interface IAuthProp {
   oNClickAuth: () => void;
