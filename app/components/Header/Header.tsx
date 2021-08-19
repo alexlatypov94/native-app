@@ -1,10 +1,13 @@
-import React from 'react';
-import {useState} from 'react';
-import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+  FlatList,
+} from 'react-native';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import {FlatList} from 'react-native-gesture-handler';
 import {HEADER_ITEMS} from '../constants/constants';
-import {useContext} from 'react';
 import {ThemeContext} from '../context/ThemeContext';
 
 interface IHeaderProp {
@@ -53,7 +56,7 @@ export const Header: React.FC<IHeaderProp> = ({
         contentContainerStyle={styles.flatListStyles}
         horizontal={true}
         data={headerItems}
-        keyExtractor={i => i}
+        keyExtractor={i => i.toString()}
         renderItem={renderHeaderItems}
       />
     </View>

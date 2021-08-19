@@ -14,7 +14,7 @@ export const ModalWindow: React.FC<IModalProp> = ({
   isVisible,
   onChangeVisible,
 }: IModalProp) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
 
   const {colors} = useContext(ThemeContext);
 

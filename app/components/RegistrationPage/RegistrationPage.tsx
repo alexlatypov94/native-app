@@ -3,7 +3,7 @@ import {useState} from 'react';
 import {Button, StyleSheet, View, Text} from 'react-native';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import {useInput} from '../hooks';
-import {emailValidator} from '../utils/emailValidator';
+import {emailValidator} from '../utils/index';
 
 export const RegistrationPage: React.FC = () => {
   const [inValidEmail, setInvalidEmail] = useState<boolean>(false);
@@ -16,6 +16,8 @@ export const RegistrationPage: React.FC = () => {
   const handleSignUp = () => {
     const checkEmail = emailValidator(email.value);
     if (checkEmail) {
+      // registration will be done here
+
       console.log('signup');
     } else {
       setInvalidEmail(true);

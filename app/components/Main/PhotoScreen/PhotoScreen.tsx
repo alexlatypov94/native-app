@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useContext} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -6,13 +6,11 @@ import {
   View,
   Image,
   FlatList,
-  LogBox,
+  Dimensions,
 } from 'react-native';
 import {IApiData} from '../../interface';
-import {getPhotos} from '../../utils/getPhotos';
-import {Dimensions} from 'react-native';
+import {getPhotos} from '../../utils/index';
 import {PHOTO_HEIGHT} from '../../constants/constants';
-import {useContext} from 'react';
 import {ThemeContext} from '../../context/ThemeContext';
 import {MyScrollView} from '../../MyScrollView/MyScrollView';
 
@@ -33,7 +31,6 @@ const image = ({item}: {item: IApiData}, isOddColumn: boolean) => {
 };
 
 export const PhotoScreen: React.FC = () => {
-  LogBox.ignoreAllLogs();
   const [photos, setPhotos] = useState<IApiData[]>([]);
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,14 +60,14 @@ export const PhotoScreen: React.FC = () => {
 
   const renderPic = (isOddColumn: boolean, id: string) => {
     const filteredPhotoArr = isOddColumn
-      ? photos.filter((el, index) => index % 2 === 0)
-      : photos.filter((el, index) => index % 2 !== 0);
+      ? photos.filter((el: IApiData, index: number) => index % 2 === 0)
+      : photos.filter((el: IApiData, index: number) => index % 2 !== 0);
 
     return (
       <FlatList
         data={filteredPhotoArr}
         renderItem={item => image(item, isOddColumn)}
-        keyExtractor={i => i.id}
+        keyExtractor={(i: IApiData) => i.id}
         scrollEnabled={false}
         listKey={id}
       />

@@ -1,4 +1,3 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {
   Button,
@@ -7,14 +6,19 @@ import {
   View,
   Text,
   Dimensions,
+  TextInput,
 } from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {SCREENS} from '../constants/constants';
 import {useInput} from '../hooks';
 import {UserDrawerParamsList} from '../interface';
-import {emailValidator} from '../utils/emailValidator';
+import {emailValidator} from '../utils/index';
 
-export const AuthPage: React.FC = () => {
+interface IAuthProp {
+  oNClickAuth: () => void;
+}
+
+export const AuthPage: React.FC<IAuthProp> = ({oNClickAuth}: IAuthProp) => {
   const navigator =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
 
@@ -62,6 +66,16 @@ export const AuthPage: React.FC = () => {
           style={styles.touchRadius}>
           <View style={styles.moveRegStyle}>
             <Text>Sign Up</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+      <View style={styles.touchContainer}>
+        <TouchableHighlight
+          onPress={oNClickAuth}
+          underlayColor="#94bfd8"
+          style={styles.touchRadius}>
+          <View style={styles.moveRegStyle}>
+            <Text>Continue without registration</Text>
           </View>
         </TouchableHighlight>
       </View>

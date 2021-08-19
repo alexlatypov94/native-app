@@ -34,17 +34,18 @@ const Drawer = createDrawerNavigator<UserDrawerParamsList>();
 const Stack = createStackNavigator();
 
 const App = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  const [isAuth, setIsAuth] = useState(false);
+  const colorScheme = Appearance.getColorScheme();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
+  const [isAuth, setIsAuth] = useState<boolean>(false);
 
   const handleModalVisible = () => {
     setIsVisible(!isVisible);
   };
 
-  const colorScheme = Appearance.getColorScheme();
-
-  const [isDark, setIsDark] = useState(colorScheme === 'dark');
+  const handleAuthWithoutReg = () => {
+    setIsAuth(true);
+  };
 
   const defaultTheme = {
     isDark,
@@ -92,7 +93,10 @@ const App = () => {
     <NavigationContainer>
       <SafeAreaView style={styles.wrapper}>
         <Stack.Navigator initialRouteName={SCREENS.auth}>
-          <Stack.Screen name={SCREENS.auth} component={AuthPage} />
+          <Stack.Screen
+            name={SCREENS.auth}
+            component={() => <AuthPage oNClickAuth={handleAuthWithoutReg} />}
+          />
           <Stack.Screen name={SCREENS.signup} component={RegistrationPage} />
         </Stack.Navigator>
       </SafeAreaView>

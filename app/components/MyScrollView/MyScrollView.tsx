@@ -8,7 +8,6 @@ interface IMyScrollProp {
 }
 
 export const MyScrollView: React.FC<IMyScrollProp> = props => {
-  console.log(props);
   return (
     <FlatList
       refreshControl={

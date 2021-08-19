@@ -12,6 +12,8 @@ export const UserMenu: React.FC = () => {
   const navigations =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
   const handlePress = (screenName: string) => {
+    // I don't know how to fix it(
+
     navigations.navigate(screenName);
   };
 
