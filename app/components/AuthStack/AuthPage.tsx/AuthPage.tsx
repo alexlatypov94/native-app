@@ -10,7 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {SCREENS} from '../../constants/constants';
+import {SCREENS, UNDERLAY_COLOR_AUTH} from '../../constants/constants';
 import {useInput} from '../../hooks';
 import {UserDrawerParamsList} from '../../interface';
 import {emailValidator, signIn} from '../../utils/index';
@@ -74,7 +74,7 @@ export const AuthPage: React.FC<IAuthProp> = React.memo(
         <View style={styles.touchContainer}>
           <TouchableHighlight
             onPress={handleMoveReg}
-            underlayColor="#94bfd8"
+            underlayColor={UNDERLAY_COLOR_AUTH}
             style={styles.touchRadius}>
             <View style={styles.moveRegStyle}>
               <Text>Sign Up</Text>
@@ -84,7 +84,7 @@ export const AuthPage: React.FC<IAuthProp> = React.memo(
         <View style={styles.touchContainer}>
           <TouchableHighlight
             onPress={oNClickAuth}
-            underlayColor="#94bfd8"
+            underlayColor={UNDERLAY_COLOR_AUTH}
             style={styles.touchRadius}>
             <View style={styles.moveRegStyle}>
               <Text>Continue without registration</Text>
