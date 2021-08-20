@@ -1,8 +1,5 @@
-import React from 'react';
-import {useContext} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
-import {Text, View} from 'react-native';
-import {Switch} from 'react-native-gesture-handler';
+import React, {useContext} from 'react';
+import {Dimensions, StyleSheet, Text, View, Switch} from 'react-native';
 import {ThemeContext} from '../../../context/ThemeContext';
 
 export const SettingsScreen: React.FC = () => {
@@ -12,14 +9,14 @@ export const SettingsScreen: React.FC = () => {
     setColorScheme(isTrue ? 'dark' : 'light');
   };
 
+  const bgColor = {backgroundColor: colors.background};
+  const textColor = {color: colors.text};
+
   return (
-    <View
-      style={[styles.settingsWrapper, {backgroundColor: colors.background}]}>
-      <Text style={[styles.settingsTitle, {color: colors.text}]}>Settings</Text>
+    <View style={[styles.settingsWrapper, bgColor]}>
+      <Text style={[styles.settingsTitle, textColor]}>Settings</Text>
       <View style={styles.settingsItem}>
-        <Text style={[styles.changeThemeTitle, {color: colors.text}]}>
-          Change theme
-        </Text>
+        <Text style={[styles.changeThemeTitle, textColor]}>Change theme</Text>
         <Switch
           thumbColor={colors.thumb}
           onValueChange={toggleSwitch}

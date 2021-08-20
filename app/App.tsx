@@ -8,7 +8,7 @@
  * @format
  */
 // import 'react-native-gesture-handler';
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {
@@ -24,9 +24,9 @@ const App = () => {
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
   const [isAuth, setIsAuth] = useState<boolean>(true);
 
-  const handleAuthWithoutReg = () => {
+  const handleAuthWithoutReg = useCallback(() => {
     setIsAuth(true);
-  };
+  }, []);
 
   const defaultTheme = {
     isDark,
@@ -38,7 +38,7 @@ const App = () => {
     <ThemeContext.Provider value={defaultTheme}>
       <NavigationContainer>
         {isAuth ? (
-          <RootStack isDark={isDark} />
+          <RootStack />
         ) : (
           <AuthStack handleAuthWithoutReg={handleAuthWithoutReg} />
         )}
@@ -46,14 +46,5 @@ const App = () => {
     </ThemeContext.Provider>
   );
 };
-
-// const styles = StyleSheet.create({
-//   wrapper: {
-//     flex: 1,
-//   },
-//   main: {
-//     flex: 15,
-//   },
-// });
 
 export default App;

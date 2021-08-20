@@ -19,13 +19,14 @@ export const StartScreen: React.FC = () => {
 
   const {colors} = useContext(ThemeContext);
 
+  const bgColor = {backgroundColor: colors.background};
+  const textColor = {color: colors.text};
+
   return (
-    <View style={[styles.startWrapper, {backgroundColor: colors.background}]}>
+    <View style={[styles.startWrapper, bgColor]}>
       <TouchableWithoutFeedback onPress={handleNavigation}>
         <View style={styles.buttonStyle}>
-          <Text style={[styles.buttonTextStyle, {color: colors.text}]}>
-            Welcome
-          </Text>
+          <Text style={[styles.buttonTextStyle, textColor]}>Welcome</Text>
           <View style={styles.roundWave} />
         </View>
       </TouchableWithoutFeedback>

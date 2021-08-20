@@ -1,3 +1,4 @@
+import {SCREENS} from './constants';
 export interface IScreens extends IScreensObjectKeys {
   start: string;
   photos: string;
@@ -10,6 +11,7 @@ interface IScreensObjectKeys {
 }
 
 export interface IUserMenuItem {
-  screen: string;
+  id?: string;
+  screen: SCREENS;
   icon: Function;
 }

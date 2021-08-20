@@ -18,6 +18,7 @@ export interface IApiData {
   urls: IUrls;
   user: IUser;
   width: number;
+  idColumn?: string;
 }
 
 interface ILinksApiData {

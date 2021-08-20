@@ -1,8 +1,12 @@
-import React from 'react';
-import {useContext} from 'react';
-import {useState} from 'react';
-import {Modal, StyleSheet, View, Text, Pressable} from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
+import React, {useState, useContext} from 'react';
+import {
+  Modal,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  TextInput,
+} from 'react-native';
 import {ThemeContext} from '../../context/ThemeContext';
 
 interface IModalProp {
@@ -10,44 +14,42 @@ interface IModalProp {
   onChangeVisible: () => void;
 }
 
-export const ModalWindow: React.FC<IModalProp> = ({
-  isVisible,
-  onChangeVisible,
-}: IModalProp) => {
-  const [value, setValue] = useState<string>('');
+export const ModalWindow: React.FC<IModalProp> = React.memo(
+  ({isVisible, onChangeVisible}: IModalProp) => {
+    const [value, setValue] = useState<string>('');
 
-  const {colors} = useContext(ThemeContext);
+    const {colors} = useContext(ThemeContext);
 
-  const handleHideModal = () => {
-    setValue('');
-    onChangeVisible();
-  };
+    const bgColor = {backgroundColor: colors.background};
+    const btnStyle = ({pressed}: {pressed: boolean}) => [
+      {backgroundColor: pressed ? '#5a58dfb0' : '#5a58df'},
+      styles.hideButton,
+    ];
+    const textInputStyle = {color: colors.text, borderBottomColor: colors.text};
 
-  return (
-    <Modal animationType="slide" transparent={true} visible={isVisible}>
-      <View style={[styles.modalStyles, {backgroundColor: colors.background}]}>
-        <Pressable
-          onPress={handleHideModal}
-          style={({pressed}) => [
-            {backgroundColor: pressed ? '#5a58dfb0' : '#5a58df'},
-            styles.hideButton,
-          ]}>
-          {<Text style={styles.textStyle}>Hide filter</Text>}
-        </Pressable>
-        <TextInput
-          placeholder="Search photo"
-          style={[
-            styles.textInput,
-            {color: colors.text, borderBottomColor: colors.text},
-          ]}
-          value={value}
-          onChangeText={setValue}
-          autoCapitalize="none"
-        />
-      </View>
-    </Modal>
-  );
-};
+    const handleHideModal = () => {
+      setValue('');
+      onChangeVisible();
+    };
+
+    return (
+      <Modal animationType="slide" transparent={true} visible={isVisible}>
+        <View style={[styles.modalStyles, bgColor]}>
+          <Pressable onPress={handleHideModal} style={btnStyle}>
+            {<Text style={styles.textStyle}>Hide filter</Text>}
+          </Pressable>
+          <TextInput
+            placeholder="Search photo"
+            style={[styles.textInput, textInputStyle]}
+            value={value}
+            onChangeText={setValue}
+            autoCapitalize="none"
+          />
+        </View>
+      </Modal>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   modalStyles: {

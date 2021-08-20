@@ -1,23 +1,22 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {useContext} from 'react';
-import {StyleSheet, TouchableHighlight, View} from 'react-native';
-import {FlatList} from 'react-native-gesture-handler';
+import React, {useContext} from 'react';
+import {StyleSheet, TouchableHighlight, View, FlatList} from 'react-native';
 import {SCREENS, USER_MENU_ITEMS} from '../../constants/constants';
 import {IUserMenuItem} from '../../constants/interfaces';
 import {ThemeContext} from '../../context/ThemeContext';
 import {UserDrawerParamsList} from '../../interface';
 
 export const UserMenu: React.FC = () => {
-  const navigations =
+  const navigation =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
-  const handlePress = (screenName: string) => {
-    // I don't know how to fix it(
-
-    navigations.navigate(screenName);
+  const handlePress = (screenName: SCREENS) => {
+    navigation.navigate(screenName);
   };
-
   const {colors} = useContext(ThemeContext);
+
+  const bgColor = {backgroundColor: colors.background};
+
+  const keyExtractor = (item: IUserMenuItem): string => item.screen;
 
   const renderUserItems = ({item}: {item: IUserMenuItem}) => {
     return (
@@ -31,12 +30,12 @@ export const UserMenu: React.FC = () => {
   };
 
   return (
-    <View style={[styles.footer, {backgroundColor: colors.background}]}>
+    <View style={[styles.footer, bgColor]}>
       <FlatList
         contentContainerStyle={styles.flatListStyles}
         horizontal={true}
         data={USER_MENU_ITEMS}
-        keyExtractor={i => i.screen}
+        keyExtractor={keyExtractor}
         renderItem={renderUserItems}
       />
     </View>

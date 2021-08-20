@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback, useContext} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -10,46 +10,60 @@ import {
 } from 'react-native';
 import {IApiData} from '../../../interface';
 import {getPhotos} from '../../../utils/index';
-import {PHOTO_HEIGHT} from '../../../constants/constants';
+import {
+  COLOR_ACTIVITY_INDICATOR,
+  PHOTO_HEIGHT,
+} from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {MyScrollView} from '../../../MyScrollView/MyScrollView';
+import {splitPhotoArray} from '../../../utils/splitPhotoArray';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-const image = ({item}: {item: IApiData}, isOddColumn: boolean) => {
+const renderItem = ({item}: {item: IApiData}) => {
+  const heightImg =
+    item.idColumn === 'odd' ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
+
   return (
     <Image
       style={styles.imgStyle}
       source={{
         uri: item?.urls?.regular,
-        height: isOddColumn ? PHOTO_HEIGHT.small : PHOTO_HEIGHT.large,
+        height: heightImg,
       }}
     />
   );
 };
 
 export const PhotoScreen: React.FC = () => {
-  const [photos, setPhotos] = useState<IApiData[]>([]);
+  const [photos, setPhotos] = useState<{
+    even: Array<IApiData>;
+    odd: Array<IApiData>;
+  }>({even: [], odd: []});
   const [isError, setIsError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const {colors} = useContext(ThemeContext);
 
-  const onRefresh = useCallback(() => {
+  const bgColor = {backgroundColor: colors.background};
+
+  const onRefresh = () => {
     setIsRefreshing(true);
     wait(2000).then(() => {
       setIsRefreshing(false);
     });
-  }, []);
+  };
+
+  const keyExtractor = (item: IApiData) => item.id;
 
   useEffect(() => {
     getPhotos()
       .then(res => {
-        setPhotos(res);
-
+        const photoObj = splitPhotoArray(res);
+        setPhotos(photoObj);
         setIsLoading(true);
       })
       .catch(error => {
@@ -58,41 +72,41 @@ export const PhotoScreen: React.FC = () => {
       });
   }, []);
 
-  const renderPic = (isOddColumn: boolean, id: string) => {
-    const filteredPhotoArr = isOddColumn
-      ? photos.filter((el: IApiData, index: number) => index % 2 === 0)
-      : photos.filter((el: IApiData, index: number) => index % 2 !== 0);
-
-    return (
-      <FlatList
-        data={filteredPhotoArr}
-        renderItem={item => image(item, isOddColumn)}
-        keyExtractor={(i: IApiData) => i.id}
-        scrollEnabled={false}
-        listKey={id}
-      />
-    );
-  };
-
   const renderView = (
     <MyScrollView isRefreshing={isRefreshing} onRefresh={onRefresh}>
-      <View
-        style={[styles.scrollWrapper, {backgroundColor: colors.background}]}>
-        <View style={styles.firstColumn}>{renderPic(true, 'first')}</View>
-        <View style={styles.secondColumn}>{renderPic(false, 'second')}</View>
+      <View style={[styles.scrollWrapper, bgColor]}>
+        <View style={styles.firstColumn}>
+          <FlatList
+            data={photos?.even}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            scrollEnabled={false}
+            listKey="first"
+          />
+        </View>
+        <View style={styles.secondColumn}>
+          <FlatList
+            data={photos?.odd}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            scrollEnabled={false}
+            listKey="second"
+          />
+        </View>
       </View>
     </MyScrollView>
   );
 
+  const renderIsloading = isLoading ? (
+    renderView
+  ) : (
+    <View style={[styles.indicatorWrapper, bgColor]}>
+      <ActivityIndicator size="large" color={COLOR_ACTIVITY_INDICATOR} />
+    </View>
+  );
+
   return !isError ? (
-    isLoading ? (
-      renderView
-    ) : (
-      <View
-        style={[styles.indicatorWrapper, {backgroundColor: colors.background}]}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
-    )
+    renderIsloading
   ) : (
     <View>
       <Text>Some Error</Text>

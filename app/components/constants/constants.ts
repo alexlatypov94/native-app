@@ -39,13 +39,6 @@ export const USER_MENU_ITEMS: Array<IUserMenuItem> = [
   },
 ];
 
-// export const USER_MENU_ITEMS = {
-//   start: HomeSvg,
-//   photos: GallerySvg,
-//   profile: AvatarSvg,
-//   settings: SettingsSvg,
-// };
-
 export const HEADER_ITEMS = {
   menu: MenuSvg,
   title: 'My Studio',
@@ -56,3 +49,5 @@ export const USER = {
   name: 'Ivan',
   surname: 'Ivanov',
 };
+
+export const COLOR_ACTIVITY_INDICATOR = '#00ff00';

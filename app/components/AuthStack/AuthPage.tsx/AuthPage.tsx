@@ -18,70 +18,72 @@ interface IAuthProp {
   oNClickAuth: () => void;
 }
 
-export const AuthPage: React.FC<IAuthProp> = ({oNClickAuth}: IAuthProp) => {
-  const navigator =
-    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
+export const AuthPage: React.FC<IAuthProp> = React.memo(
+  ({oNClickAuth}: IAuthProp) => {
+    const navigator =
+      useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
 
-  const [inValidEmail, setInValidEmail] = useState(false);
+    const [inValidEmail, setInValidEmail] = useState(false);
 
-  const email = useInput('');
-  const password = useInput('');
+    const email = useInput('');
+    const password = useInput('');
 
-  const handlePress = () => {
-    const checkEmail = emailValidator(email.value);
-    if (checkEmail) {
-      console.log('valid');
-    } else {
-      setInValidEmail(true);
-    }
-  };
+    const handlePress = () => {
+      const checkEmail = emailValidator(email.value);
+      if (checkEmail) {
+        console.log('valid');
+      } else {
+        setInValidEmail(true);
+      }
+    };
 
-  const handleMoveReg = () => {
-    navigator.navigate(SCREENS.signup);
-  };
+    const handleMoveReg = () => {
+      navigator.navigate(SCREENS.signup);
+    };
 
-  return (
-    <View style={styles.wrapper}>
-      <TextInput
-        style={styles.inputField}
-        placeholder="E-mail"
-        autoCapitalize="none"
-        {...email}
-      />
-      {inValidEmail && (
-        <Text style={styles.invalidEmail}>email is invalid</Text>
-      )}
-      <TextInput
-        style={styles.inputField}
-        placeholder="Password"
-        secureTextEntry={true}
-        autoCapitalize="none"
-        {...password}
-      />
-      <Button onPress={handlePress} title="Log in" />
-      <View style={styles.touchContainer}>
-        <TouchableHighlight
-          onPress={handleMoveReg}
-          underlayColor="#94bfd8"
-          style={styles.touchRadius}>
-          <View style={styles.moveRegStyle}>
-            <Text>Sign Up</Text>
-          </View>
-        </TouchableHighlight>
+    return (
+      <View style={styles.wrapper}>
+        <TextInput
+          style={styles.inputField}
+          placeholder="E-mail"
+          autoCapitalize="none"
+          {...email}
+        />
+        {inValidEmail && (
+          <Text style={styles.invalidEmail}>email is invalid</Text>
+        )}
+        <TextInput
+          style={styles.inputField}
+          placeholder="Password"
+          secureTextEntry={true}
+          autoCapitalize="none"
+          {...password}
+        />
+        <Button onPress={handlePress} title="Log in" />
+        <View style={styles.touchContainer}>
+          <TouchableHighlight
+            onPress={handleMoveReg}
+            underlayColor="#94bfd8"
+            style={styles.touchRadius}>
+            <View style={styles.moveRegStyle}>
+              <Text>Sign Up</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.touchContainer}>
+          <TouchableHighlight
+            onPress={oNClickAuth}
+            underlayColor="#94bfd8"
+            style={styles.touchRadius}>
+            <View style={styles.moveRegStyle}>
+              <Text>Continue without registration</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
       </View>
-      <View style={styles.touchContainer}>
-        <TouchableHighlight
-          onPress={oNClickAuth}
-          underlayColor="#94bfd8"
-          style={styles.touchRadius}>
-          <View style={styles.moveRegStyle}>
-            <Text>Continue without registration</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   wrapper: {
