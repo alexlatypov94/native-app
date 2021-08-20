@@ -61,7 +61,11 @@ export const RootStack: React.FC = () => {
               headerRight: headerRight,
             }}
           />
-          <Drawer.Screen name={SCREENS.profile} component={ProfileScreen} />
+          <Drawer.Screen
+            name={SCREENS.profile}
+            component={ProfileScreen}
+            options={{title: 'My Profile'}}
+          />
           <Drawer.Screen name={SCREENS.settings} component={SettingsScreen} />
         </Drawer.Navigator>
       </View>

@@ -27,7 +27,6 @@ export const ProfileScreen: React.FC = () => {
 
   return (
     <View style={[styles.profileWrapper, bgColor]}>
-      <Text style={[styles.profileTitle, textColor]}>My Profile</Text>
       <UserSvg />
       <Text style={[styles.userName, textColor]}>{userInfo.userName}</Text>
       <Text style={[styles.userName, textColor]}>{userInfo.userSurName}</Text>

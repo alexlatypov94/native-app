@@ -19,6 +19,8 @@ import {
 import {RootStack} from './components/RootStack/RootStack';
 import {AuthStack} from './components/AuthStack/AuthStack';
 import auth from '@react-native-firebase/auth';
+import {Provider} from 'react-redux';
+import store from './store';
 
 const App = () => {
   const colorScheme = Appearance.getColorScheme();
@@ -44,15 +46,17 @@ const App = () => {
   };
 
   return (
-    <ThemeContext.Provider value={defaultTheme}>
-      <NavigationContainer>
-        {isAuth ? (
-          <RootStack />
-        ) : (
-          <AuthStack handleAuthWithoutReg={handleAuthWithoutReg} />
-        )}
-      </NavigationContainer>
-    </ThemeContext.Provider>
+    <Provider store={store}>
+      <ThemeContext.Provider value={defaultTheme}>
+        <NavigationContainer>
+          {isAuth ? (
+            <RootStack isDark={isDark} />
+          ) : (
+            <AuthStack handleAuthWithoutReg={handleAuthWithoutReg} />
+          )}
+        </NavigationContainer>
+      </ThemeContext.Provider>
+    </Provider>
   );
 };
 
