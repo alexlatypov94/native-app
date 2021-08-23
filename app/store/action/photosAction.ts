@@ -12,9 +12,9 @@ export function finishFetchPhoto() {
   };
 }
 
-export function successFetchPhoto() {
+export function fetchPhoto() {
   return {
-    type: PhotosActionTypes.FETCH_PHOTO,
+    type: PhotosActionTypes.REQUEST_PHOTO,
   };
 }
 

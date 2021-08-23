@@ -45,9 +45,9 @@ export const HEADER_ITEMS = {
   filter: FilterSvg,
 };
 
-export const USER = {
-  name: 'Ivan',
-  surname: 'Ivanov',
+export const DEFAULT_USER = {
+  name: 'User',
+  surname: 'User',
 };
 
 export const COLOR_ACTIVITY_INDICATOR = '#00ff00';

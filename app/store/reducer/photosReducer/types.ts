@@ -9,12 +9,12 @@ export enum PhotosActionTypes {
 }
 
 export interface IPhotosReducerState {
-  photos: Array<IApiData>;
+  photoData: Array<IApiData>;
   isLoading: boolean;
   isError: boolean;
 }
 
 export interface IPhotosAction {
   type: PhotosActionTypes;
-  payload: IPhotosReducerState;
+  payload: Array<IApiData>;
 }

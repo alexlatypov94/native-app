@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -9,7 +9,6 @@ import {
   Dimensions,
 } from 'react-native';
 import {IApiData} from '../../../interface';
-import {getPhotos} from '../../../utils/index';
 import {
   COLOR_ACTIVITY_INDICATOR,
   PHOTO_HEIGHT,
@@ -17,6 +16,9 @@ import {
 import {ThemeContext} from '../../../context/ThemeContext';
 import {MyScrollView} from '../../../MyScrollView/MyScrollView';
 import {splitPhotoArray} from '../../../utils/splitPhotoArray';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchPhoto} from '../../../../store/action/photosAction';
+import {IAppState} from '../../../../store/types';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
@@ -42,15 +44,18 @@ export const PhotoScreen: React.FC = () => {
     even: Array<IApiData>;
     odd: Array<IApiData>;
   }>({even: [], odd: []});
-  const [isError, setIsError] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const {photoData, isError, isLoading} = useSelector(
+    (state: IAppState) => state.photosReducer,
+  );
+  const dispatch = useDispatch();
 
   const {colors} = useContext(ThemeContext);
 
   const bgColor = {backgroundColor: colors.background};
 
   const onRefresh = () => {
+    console.log(photoData);
     setIsRefreshing(true);
     wait(2000).then(() => {
       setIsRefreshing(false);
@@ -59,18 +64,16 @@ export const PhotoScreen: React.FC = () => {
 
   const keyExtractor = (item: IApiData) => item.id;
 
+  const getPhotos = useCallback(() => dispatch(fetchPhoto()), [dispatch]);
+
   useEffect(() => {
-    getPhotos()
-      .then(res => {
-        const photoObj = splitPhotoArray(res);
-        setPhotos(photoObj);
-        setIsLoading(true);
-      })
-      .catch(error => {
-        console.log(error);
-        setIsError(true);
-      });
-  }, []);
+    getPhotos();
+  }, [getPhotos]);
+
+  useEffect(() => {
+    const photoObj = splitPhotoArray(photoData);
+    setPhotos(photoObj);
+  }, [photoData]);
 
   const renderView = (
     <MyScrollView isRefreshing={isRefreshing} onRefresh={onRefresh}>
@@ -97,7 +100,7 @@ export const PhotoScreen: React.FC = () => {
     </MyScrollView>
   );
 
-  const renderIsloading = isLoading ? (
+  const renderIsloading = !isLoading ? (
     renderView
   ) : (
     <View style={[styles.indicatorWrapper, bgColor]}>

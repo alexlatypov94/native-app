@@ -59,6 +59,7 @@ export const RootStack: React.FC = () => {
             component={PhotoScreen}
             options={{
               headerRight: headerRight,
+              title: 'My Studio',
             }}
           />
           <Drawer.Screen

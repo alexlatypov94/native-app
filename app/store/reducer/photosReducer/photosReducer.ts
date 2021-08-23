@@ -1,7 +1,7 @@
 import {IPhotosAction, IPhotosReducerState, PhotosActionTypes} from './types';
 
 const initialState: IPhotosReducerState = {
-  photos: [],
+  photoData: [],
   isLoading: false,
   isError: false,
 };
@@ -12,12 +12,12 @@ const photosReducer = (
 ) => {
   switch (action.type) {
     case PhotosActionTypes.FETCH_PHOTO:
-      return {...state, photos: state.photos.concat(action.payload.photos)};
+      return {...state, photoData: state.photoData.concat(action.payload)};
     case PhotosActionTypes.FETCH_PHOTO_ERROR:
       return {...state, isError: true};
     case PhotosActionTypes.FETCH_PHOTO_LOADING_START:
       return {...state, isLoading: true};
-    case PhotosActionTypes.FETCH_PHOTO_LOADING_START:
+    case PhotosActionTypes.FETCH_PHOTO_LOADING_END:
       return {...state, isLoading: false};
     default:
       return state;
