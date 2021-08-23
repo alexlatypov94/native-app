@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setAuth, setAuthWithoutReg} from '../../../store/action/authAction';
 
-export const AuthPage: React.FC = React.memo(() => {
+export const AuthPage: React.FC = () => {
   const navigator =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
 
@@ -95,7 +95,7 @@ export const AuthPage: React.FC = React.memo(() => {
       </View>
     </View>
   );
-});
+};
 
 const styles = StyleSheet.create({
   wrapper: {

@@ -19,7 +19,7 @@ import {RootStack} from './RootStack/RootStack';
 import {AuthStack} from './AuthStack/AuthStack';
 import {setAuth} from '../store/action/authAction';
 
-const AppRoot = React.memo(() => {
+const AppRoot = () => {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
 
@@ -60,6 +60,6 @@ const AppRoot = React.memo(() => {
       </NavigationContainer>
     </ThemeContext.Provider>
   );
-});
+};
 
 export default AppRoot;
