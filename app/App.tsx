@@ -7,43 +7,44 @@
  *
  * @format
  */
-import 'react-native-gesture-handler';
-import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
-import {Footer} from './components/Footer/Footer';
-import {Header} from './components/Header/Header';
+// import 'react-native-gesture-handler';
+import React, {useState, useCallback} from 'react';
+import {Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {StartScreen} from './components/Main/StartScreen/StartScreen';
-import {PhotoScreen} from './components/Main/PhotoScreen/PhotoScreen';
-import {SCREENS} from './components/constants/constants';
-
-const Stack = createStackNavigator();
+import {
+  DARK_COLORS,
+  LIGHT_COLORS,
+  ThemeContext,
+} from './components/context/ThemeContext';
+import {RootStack} from './components/RootStack/RootStack';
+import {AuthStack} from './components/AuthStack/AuthStack';
 
 const App = () => {
+  const colorScheme = Appearance.getColorScheme();
+  const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
+  const [isAuth, setIsAuth] = useState<boolean>(true);
+
+  const handleAuthWithoutReg = useCallback(() => {
+    setIsAuth(true);
+  }, []);
+
+  const defaultTheme = {
+    isDark,
+    colors: isDark ? DARK_COLORS : LIGHT_COLORS,
+    setColorScheme: (scheme: string) => setIsDark(scheme === 'dark'),
+  };
+
   return (
-    <NavigationContainer>
-      <SafeAreaView style={styles.wrapper}>
-        <Header />
-        <View style={styles.main}>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name={SCREENS.start} component={StartScreen} />
-            <Stack.Screen name={SCREENS.photos} component={PhotoScreen} />
-          </Stack.Navigator>
-        </View>
-        <Footer />
-      </SafeAreaView>
-    </NavigationContainer>
+    <ThemeContext.Provider value={defaultTheme}>
+      <NavigationContainer>
+        {isAuth ? (
+          <RootStack />
+        ) : (
+          <AuthStack handleAuthWithoutReg={handleAuthWithoutReg} />
+        )}
+      </NavigationContainer>
+    </ThemeContext.Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-  },
-  main: {
-    flex: 15,
-  },
-});
 
 export default App;

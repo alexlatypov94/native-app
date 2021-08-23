@@ -1,3 +1,4 @@
+import {SCREENS} from './../constants/constants';
 export interface IApiData {
   alt_description: string;
   blur_hash: string;
@@ -17,6 +18,7 @@ export interface IApiData {
   urls: IUrls;
   user: IUser;
   width: number;
+  idColumn?: string;
 }
 
 interface ILinksApiData {
@@ -107,3 +109,12 @@ interface IUser {
   updated_at: string | null;
   username: string | null;
 }
+
+export type UserDrawerParamsList = {
+  [SCREENS.start]: undefined;
+  [SCREENS.photos]: undefined;
+  [SCREENS.settings]: undefined;
+  [SCREENS.profile]: undefined;
+  [SCREENS.auth]: undefined;
+  [SCREENS.signup]: undefined;
+};

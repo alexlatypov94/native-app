@@ -1,23 +1,32 @@
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {useContext} from 'react';
 import {Dimensions} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {Text, View} from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {SCREENS} from '../../constants/constants';
+import {SCREENS} from '../../../constants/constants';
+import {ThemeContext} from '../../../context/ThemeContext';
+import {UserDrawerParamsList} from '../../../interface';
 
 export const StartScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.photos>>();
 
   const handleNavigation = () => {
-    navigation.navigate(SCREENS.photos as never);
+    navigation.navigate(SCREENS.photos);
   };
 
+  const {colors} = useContext(ThemeContext);
+
+  const bgColor = {backgroundColor: colors.background};
+  const textColor = {color: colors.text};
+
   return (
-    <View style={styles.startWrapper}>
+    <View style={[styles.startWrapper, bgColor]}>
       <TouchableWithoutFeedback onPress={handleNavigation}>
         <View style={styles.buttonStyle}>
-          <Text style={styles.buttonTextStyle}>Welcome</Text>
+          <Text style={[styles.buttonTextStyle, textColor]}>Welcome</Text>
           <View style={styles.roundWave} />
         </View>
       </TouchableWithoutFeedback>
@@ -30,7 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F2126',
   },
   buttonStyle: {
     width: Dimensions.get('window').width,
@@ -42,7 +50,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     zIndex: 1,
     textAlign: 'center',
-    color: '#fff',
     fontSize: 40,
   },
   roundWave: {
