@@ -55,6 +55,7 @@ export const PhotoScreen: React.FC = () => {
   const bgColor = {backgroundColor: colors.background};
 
   const onRefresh = () => {
+    console.log(photoData);
     setIsRefreshing(true);
     wait(2000).then(() => {
       setIsRefreshing(false);
@@ -64,6 +65,10 @@ export const PhotoScreen: React.FC = () => {
   const keyExtractor = (item: IApiData, index: number) => item.id + index;
 
   const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
+
+  useEffect(() => {
+    getPhotos();
+  }, [getPhotos]);
 
   useEffect(() => {
     getPhotos();
