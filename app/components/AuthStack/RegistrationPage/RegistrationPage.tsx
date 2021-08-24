@@ -6,9 +6,11 @@ import {
   Text,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
 import {useInput} from '../../hooks';
-import {emailValidator} from '../../utils/index';
+import {createUser, emailValidator} from '../../utils/index';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const RegistrationPage: React.FC = () => {
   const [inValidEmail, setInvalidEmail] = useState<boolean>(false);
@@ -18,9 +20,21 @@ export const RegistrationPage: React.FC = () => {
   const password = useInput('');
   const confirmPassword = useInput('');
 
+  const storeData = async (userName: string, userSurName: string) => {
+    try {
+      const userData = JSON.stringify({userName, userSurName});
+      await AsyncStorage.setItem(email.value, userData);
+      await AsyncStorage.setItem('email', email.value);
+    } catch (error) {
+      Alert.alert(error);
+    }
+  };
+
   const handleSignUp = () => {
     const checkEmail = emailValidator(email.value);
-    if (checkEmail) {
+    if (checkEmail && password.value === confirmPassword.value) {
+      createUser(email.value, password.value);
+      storeData(name.value, surname.value);
       console.log('signup');
     } else {
       setInvalidEmail(true);

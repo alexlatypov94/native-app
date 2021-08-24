@@ -18,11 +18,20 @@ import {
 } from './components/context/ThemeContext';
 import {RootStack} from './components/RootStack/RootStack';
 import {AuthStack} from './components/AuthStack/AuthStack';
+import auth from '@react-native-firebase/auth';
 
 const App = () => {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
   const [isAuth, setIsAuth] = useState<boolean>(true);
+
+  auth().onAuthStateChanged(user => {
+    if (user) {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+  });
 
   const handleAuthWithoutReg = useCallback(() => {
     setIsAuth(true);

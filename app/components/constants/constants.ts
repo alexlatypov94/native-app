@@ -51,3 +51,5 @@ export const USER = {
 };
 
 export const COLOR_ACTIVITY_INDICATOR = '#00ff00';
+
+export const UNDERLAY_COLOR_AUTH = '#94bfd8';
