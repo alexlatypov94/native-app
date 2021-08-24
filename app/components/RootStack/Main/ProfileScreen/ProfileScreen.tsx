@@ -11,7 +11,7 @@ export const ProfileScreen: React.FC = () => {
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
 
-  const getGata = async () => {
+  const getData = async () => {
     try {
       const currentEmail = await AsyncStorage.getItem('email');
       const userData = await AsyncStorage.getItem(currentEmail as string);
@@ -20,7 +20,7 @@ export const ProfileScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    getGata();
+    getData();
   }, []);
 
   console.log(userInfo);
