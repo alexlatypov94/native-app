@@ -24,9 +24,6 @@ const AppRoot = () => {
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
 
   const {isAut} = useSelector((state: IAppState) => state.authReducer);
-  const store = useSelector((state: IAppState) => state.authReducer);
-
-  console.log(store);
 
   const dispatch = useDispatch();
   const setAuthorithation = useCallback(
@@ -38,10 +35,8 @@ const AppRoot = () => {
   useEffect(() => {
     auth().onAuthStateChanged(user => {
       if (user) {
-        console.log('user');
         setAuthorithation(true);
       } else {
-        console.log('no user');
         setAuthorithation(false);
       }
     });

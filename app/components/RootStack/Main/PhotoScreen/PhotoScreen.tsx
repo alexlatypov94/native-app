@@ -17,7 +17,7 @@ import {ThemeContext} from '../../../context/ThemeContext';
 import {MyScrollView} from '../../../MyScrollView/MyScrollView';
 import {splitPhotoArray} from '../../../utils/splitPhotoArray';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchPhoto} from '../../../../store/action/photosAction';
+import {startRequest} from '../../../../store/action/photosAction';
 import {IAppState} from '../../../../store/types';
 
 const wait = (timeout: number) => {
@@ -55,16 +55,15 @@ export const PhotoScreen: React.FC = () => {
   const bgColor = {backgroundColor: colors.background};
 
   const onRefresh = () => {
-    console.log(photoData);
     setIsRefreshing(true);
     wait(2000).then(() => {
       setIsRefreshing(false);
     });
   };
 
-  const keyExtractor = (item: IApiData) => item.id;
+  const keyExtractor = (item: IApiData, index: number) => item.id + index;
 
-  const getPhotos = useCallback(() => dispatch(fetchPhoto()), [dispatch]);
+  const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
 
   useEffect(() => {
     getPhotos();
@@ -74,6 +73,8 @@ export const PhotoScreen: React.FC = () => {
     const photoObj = splitPhotoArray(photoData);
     setPhotos(photoObj);
   }, [photoData]);
+
+  console.log(isError);
 
   const renderView = (
     <MyScrollView isRefreshing={isRefreshing} onRefresh={onRefresh}>

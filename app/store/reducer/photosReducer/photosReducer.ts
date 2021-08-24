@@ -11,14 +11,16 @@ const photosReducer = (
   action: IPhotosAction,
 ) => {
   switch (action.type) {
-    case PhotosActionTypes.FETCH_PHOTO:
-      return {...state, photoData: state.photoData.concat(action.payload)};
-    case PhotosActionTypes.FETCH_PHOTO_ERROR:
-      return {...state, isError: true};
-    case PhotosActionTypes.FETCH_PHOTO_LOADING_START:
+    case PhotosActionTypes.REQUEST_PHOTO:
       return {...state, isLoading: true};
-    case PhotosActionTypes.FETCH_PHOTO_LOADING_END:
-      return {...state, isLoading: false};
+    case PhotosActionTypes.REQUEST_SUCCESS:
+      return {
+        ...state,
+        photoData: state.photoData.concat(action.payload),
+        isLoading: false,
+      };
+    case PhotosActionTypes.REQUEST_FAILURE:
+      return {...state, isError: true};
     default:
       return state;
   }

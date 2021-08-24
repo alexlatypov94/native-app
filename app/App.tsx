@@ -14,7 +14,6 @@ import store from './store';
 import AppRoot from './components/AppRoot';
 
 const App = () => {
-  console.log('called APP');
   return (
     <Provider store={store}>
       <AppRoot />

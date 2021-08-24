@@ -1,11 +1,7 @@
 import {PhotosActionTypes} from './reducer/photosReducer/types';
 import {getPhotos} from './../components/utils/getPhotos';
 import {call, put, takeEvery} from 'redux-saga/effects';
-import {
-  errorFetchPhoto,
-  finishFetchPhoto,
-  startFetchPhoto,
-} from './action/photosAction';
+import {errorRequest, successRequest} from './action/photosAction';
 import {IApiData} from '../components/interface';
 
 export function* watcher() {
@@ -14,11 +10,13 @@ export function* watcher() {
 
 function* photoWorker() {
   try {
-    yield put(startFetchPhoto());
     const payload: Array<IApiData> = yield call(getPhotos);
-    yield put({type: PhotosActionTypes.FETCH_PHOTO, payload});
-    yield put(finishFetchPhoto());
+    console.log(payload);
+    yield put({type: PhotosActionTypes.REQUEST_SUCCESS, payload});
+
+    yield put(successRequest());
   } catch (error) {
-    yield put(errorFetchPhoto());
+    console.log(error);
+    yield put(errorRequest());
   }
 }

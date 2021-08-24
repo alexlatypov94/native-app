@@ -6,7 +6,6 @@ const initialState: IAuthState = {
 };
 
 const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
-  console.log(action.payload);
   switch (action.type) {
     case AuthActionTypes.AUTHORIZATION:
       return {...state, isAut: action.payload};
