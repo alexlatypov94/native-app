@@ -1,12 +1,11 @@
 import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   View,
   Image,
-  FlatList,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {IApiData} from '../../../interface';
 import {
@@ -14,22 +13,22 @@ import {
   PHOTO_HEIGHT,
 } from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
-import {MyScrollView} from '../../../MyScrollView/MyScrollView';
 import {splitPhotoArray} from '../../../utils/splitPhotoArray';
 import {useDispatch, useSelector} from 'react-redux';
 import {startRequest} from '../../../../store/action/photosAction';
 import {IAppState} from '../../../../store/types';
+import MasonryList from '@react-native-seoul/masonry-list';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-const renderItem = ({item}: {item: IApiData}) => {
-  const heightImg =
-    item.idColumn === 'odd' ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
+const renderItem = ({item, i}: {item: IApiData; i: number}) => {
+  const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
 
   return (
     <Image
+      key={item.id + i}
       style={styles.imgStyle}
       source={{
         uri: item?.urls?.regular,
@@ -48,6 +47,12 @@ export const PhotoScreen: React.FC = () => {
   const {photoData, isError, isLoading} = useSelector(
     (state: IAppState) => state.photosReducer,
   );
+
+  const [
+    onEndReachedCalledDuringMomentum,
+    setOnEndReachedCalledDuringMomentum,
+  ] = useState(true);
+
   const dispatch = useDispatch();
 
   const {colors} = useContext(ThemeContext);
@@ -55,14 +60,11 @@ export const PhotoScreen: React.FC = () => {
   const bgColor = {backgroundColor: colors.background};
 
   const onRefresh = () => {
-    console.log(photoData);
     setIsRefreshing(true);
     wait(2000).then(() => {
       setIsRefreshing(false);
     });
   };
-
-  const keyExtractor = (item: IApiData, index: number) => item.id + index;
 
   const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
 
@@ -70,52 +72,50 @@ export const PhotoScreen: React.FC = () => {
     getPhotos();
   }, [getPhotos]);
 
+  const onEndReached = () => {
+    if (!onEndReachedCalledDuringMomentum) {
+      getPhotos();
+      setOnEndReachedCalledDuringMomentum(true);
+    }
+  };
+
+  const onMomentumScrollBegin = () =>
+    setOnEndReachedCalledDuringMomentum(false);
+
   useEffect(() => {
     getPhotos();
   }, [getPhotos]);
 
   useEffect(() => {
     const photoObj = splitPhotoArray(photoData);
+    console.log(photoObj);
     setPhotos(photoObj);
   }, [photoData]);
 
   console.log(isError);
 
   const renderView = (
-    <MyScrollView isRefreshing={isRefreshing} onRefresh={onRefresh}>
-      <View style={[styles.scrollWrapper, bgColor]}>
-        <View style={styles.firstColumn}>
-          <FlatList
-            data={photos?.even}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            scrollEnabled={false}
-            listKey="first"
-          />
+    <View style={styles.masonry}>
+      <MasonryList
+        contentContainerStyle={{...bgColor}}
+        data={photoData}
+        numColumns={2}
+        renderItem={renderItem}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.4}
+        refreshing={isRefreshing}
+        onMomentumScrollBegin={onMomentumScrollBegin}
+      />
+      {isLoading && (
+        <View style={[styles.indicatorWrapper, bgColor]}>
+          <ActivityIndicator size="large" color={COLOR_ACTIVITY_INDICATOR} />
         </View>
-        <View style={styles.secondColumn}>
-          <FlatList
-            data={photos?.odd}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            scrollEnabled={false}
-            listKey="second"
-          />
-        </View>
-      </View>
-    </MyScrollView>
-  );
-
-  const renderIsloading = !isLoading ? (
-    renderView
-  ) : (
-    <View style={[styles.indicatorWrapper, bgColor]}>
-      <ActivityIndicator size="large" color={COLOR_ACTIVITY_INDICATOR} />
+      )}
     </View>
   );
 
   return !isError ? (
-    renderIsloading
+    renderView
   ) : (
     <View>
       <Text>Some Error</Text>
@@ -124,11 +124,14 @@ export const PhotoScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollWrapper: {
-    position: 'relative',
-    width: Dimensions.get('window').width,
-    flexDirection: 'row',
+  masonry: {
+    flex: 1,
     justifyContent: 'space-between',
+  },
+  scrollWrapper: {
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imgStyle: {
     width: Dimensions.get('window').width / 2.5,
@@ -136,18 +139,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 
-  firstColumn: {
-    width: Dimensions.get('window').width / 2,
-    position: 'relative',
-    alignItems: 'center',
-  },
-  secondColumn: {
-    width: Dimensions.get('window').width / 2,
-    alignItems: 'center',
-  },
-
   indicatorWrapper: {
     flex: 1,
     justifyContent: 'center',
+    paddingVertical: 20,
   },
 });
