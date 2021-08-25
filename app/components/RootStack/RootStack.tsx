@@ -14,6 +14,7 @@ import {
   DrawerNavigationOptions,
 } from '@react-navigation/drawer';
 import {Filter} from './Filter/Filter';
+import {SelectedPhoto} from './Main/SelectedPhoto/SelectedPhoto';
 
 const Drawer = createDrawerNavigator<UserDrawerParamsList>();
 
@@ -68,6 +69,11 @@ export const RootStack: React.FC = () => {
             options={{title: 'My Profile'}}
           />
           <Drawer.Screen name={SCREENS.settings} component={SettingsScreen} />
+          <Drawer.Screen
+            name={SCREENS.selectedPhoto}
+            component={SelectedPhoto}
+            options={{headerShown: false}}
+          />
         </Drawer.Navigator>
       </View>
       <UserMenu />

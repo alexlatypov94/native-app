@@ -11,6 +11,7 @@ export enum SCREENS {
   photos = 'Photos',
   profile = 'Profile',
   settings = 'Settings',
+  selectedPhoto = 'SelectedPhoto',
   auth = 'Authorization',
   signup = 'Registration',
 }

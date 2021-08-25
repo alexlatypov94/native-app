@@ -16,7 +16,7 @@ const photosReducer = (
     case PhotosActionTypes.REQUEST_SUCCESS:
       return {
         ...state,
-        photoData: state.photoData.concat(action.payload),
+        photoData: state.photoData.concat(action.payload).filter(el => el),
         isLoading: false,
       };
     case PhotosActionTypes.REQUEST_FAILURE:

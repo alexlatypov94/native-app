@@ -6,43 +6,26 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  TouchableHighlight,
 } from 'react-native';
-import {IApiData} from '../../../interface';
+import {IApiData, UserDrawerParamsList} from '../../../interface';
 import {
   COLOR_ACTIVITY_INDICATOR,
   PHOTO_HEIGHT,
+  SCREENS,
 } from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
-import {splitPhotoArray} from '../../../utils/splitPhotoArray';
 import {useDispatch, useSelector} from 'react-redux';
 import {startRequest} from '../../../../store/action/photosAction';
 import {IAppState} from '../../../../store/types';
 import MasonryList from '@react-native-seoul/masonry-list';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-const renderItem = ({item, i}: {item: IApiData; i: number}) => {
-  const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
-
-  return (
-    <Image
-      key={item.id + i}
-      style={styles.imgStyle}
-      source={{
-        uri: item?.urls?.regular,
-        height: heightImg,
-      }}
-    />
-  );
-};
-
 export const PhotoScreen: React.FC = () => {
-  const [photos, setPhotos] = useState<{
-    even: Array<IApiData>;
-    odd: Array<IApiData>;
-  }>({even: [], odd: []});
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {photoData, isError, isLoading} = useSelector(
     (state: IAppState) => state.photosReducer,
@@ -53,11 +36,18 @@ export const PhotoScreen: React.FC = () => {
     setOnEndReachedCalledDuringMomentum,
   ] = useState(true);
 
+  const navigation =
+    useNavigation<
+      NavigationProp<UserDrawerParamsList, SCREENS.selectedPhoto>
+    >();
+
   const dispatch = useDispatch();
 
   const {colors} = useContext(ThemeContext);
 
   const bgColor = {backgroundColor: colors.background};
+
+  const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
 
   const onRefresh = () => {
     setIsRefreshing(true);
@@ -66,11 +56,8 @@ export const PhotoScreen: React.FC = () => {
     });
   };
 
-  const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
-
-  useEffect(() => {
-    getPhotos();
-  }, [getPhotos]);
+  const moveToPhotoPage = (id: string) =>
+    navigation.navigate(SCREENS.selectedPhoto, {photoId: id});
 
   const onEndReached = () => {
     if (!onEndReachedCalledDuringMomentum) {
@@ -86,24 +73,38 @@ export const PhotoScreen: React.FC = () => {
     getPhotos();
   }, [getPhotos]);
 
-  useEffect(() => {
-    const photoObj = splitPhotoArray(photoData);
-    console.log(photoObj);
-    setPhotos(photoObj);
-  }, [photoData]);
+  const renderItem = ({item, i}: {item: IApiData; i: number}) => {
+    const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
 
-  console.log(isError);
+    return (
+      <View style={styles.imgWrapperStyle} key={item.id + i}>
+        <TouchableHighlight
+          onPress={() => moveToPhotoPage(item.id)}
+          underlayColor="#fff"
+          style={styles.touchableBorder}>
+          <Image
+            style={styles.imgStyle}
+            source={{
+              uri: item?.urls?.regular,
+              height: heightImg,
+            }}
+          />
+        </TouchableHighlight>
+      </View>
+    );
+  };
 
   const renderView = (
-    <View style={styles.masonry}>
+    <View style={[styles.masonry, {...bgColor}]}>
       <MasonryList
         contentContainerStyle={{...bgColor}}
         data={photoData}
         numColumns={2}
         renderItem={renderItem}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.4}
         refreshing={isRefreshing}
+        onRefresh={onRefresh}
+        onEndReachedThreshold={0.5}
         onMomentumScrollBegin={onMomentumScrollBegin}
       />
       {isLoading && (
@@ -136,12 +137,20 @@ const styles = StyleSheet.create({
   imgStyle: {
     width: Dimensions.get('window').width / 2.5,
     borderRadius: 10,
-    margin: 10,
+    overflow: 'hidden',
   },
 
   indicatorWrapper: {
     flex: 1,
     justifyContent: 'center',
     paddingVertical: 20,
+  },
+
+  imgWrapperStyle: {
+    margin: 10,
+    alignItems: 'center',
+  },
+  touchableBorder: {
+    borderRadius: 10,
   },
 });

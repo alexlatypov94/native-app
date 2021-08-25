@@ -11,7 +11,6 @@ export function* watcher() {
 function* photoWorker() {
   try {
     const payload: Array<IApiData> = yield call(getPhotos);
-    console.log(payload);
     yield put({type: PhotosActionTypes.REQUEST_SUCCESS, payload});
 
     yield put(successRequest());
