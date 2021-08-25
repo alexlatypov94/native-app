@@ -26,7 +26,7 @@ const AppRoot = () => {
   const {isAut} = useSelector((state: IAppState) => state.authReducer);
 
   const dispatch = useDispatch();
-  const setAuthorithation = useCallback(
+  const setAuthorization = useCallback(
     (value: boolean) => {
       dispatch(setAuth(value));
     },
@@ -35,12 +35,12 @@ const AppRoot = () => {
   useEffect(() => {
     auth().onAuthStateChanged(user => {
       if (user) {
-        setAuthorithation(true);
+        setAuthorization(true);
       } else {
-        setAuthorithation(false);
+        setAuthorization(false);
       }
     });
-  }, [setAuthorithation]);
+  }, [setAuthorization]);
 
   const defaultTheme = {
     isDark,

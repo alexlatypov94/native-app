@@ -4,6 +4,7 @@ export interface IScreens extends IScreensObjectKeys {
   photos: string;
   settings: string;
   profile: string;
+  selectedPhoto: string;
 }
 
 interface IScreensObjectKeys {

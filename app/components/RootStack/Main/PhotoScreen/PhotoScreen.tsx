@@ -1,58 +1,53 @@
 import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {
-  ActivityIndicator,
   StyleSheet,
   Text,
   View,
   Image,
-  FlatList,
   Dimensions,
+  ActivityIndicator,
+  TouchableHighlight,
 } from 'react-native';
-import {IApiData} from '../../../interface';
+import {IApiData, UserDrawerParamsList} from '../../../interface';
 import {
   COLOR_ACTIVITY_INDICATOR,
   PHOTO_HEIGHT,
+  SCREENS,
 } from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
-import {MyScrollView} from '../../../MyScrollView/MyScrollView';
-import {splitPhotoArray} from '../../../utils/splitPhotoArray';
 import {useDispatch, useSelector} from 'react-redux';
 import {startRequest} from '../../../../store/action/photosAction';
 import {IAppState} from '../../../../store/types';
+import MasonryList from '@react-native-seoul/masonry-list';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-const renderItem = ({item}: {item: IApiData}) => {
-  const heightImg =
-    item.idColumn === 'odd' ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
-
-  return (
-    <Image
-      style={styles.imgStyle}
-      source={{
-        uri: item?.urls?.regular,
-        height: heightImg,
-      }}
-    />
-  );
-};
-
 export const PhotoScreen: React.FC = () => {
-  const [photos, setPhotos] = useState<{
-    even: Array<IApiData>;
-    odd: Array<IApiData>;
-  }>({even: [], odd: []});
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {photoData, isError, isLoading} = useSelector(
     (state: IAppState) => state.photosReducer,
   );
+
+  const [
+    onEndReachedCalledDuringMomentum,
+    setOnEndReachedCalledDuringMomentum,
+  ] = useState(true);
+
+  const navigation =
+    useNavigation<
+      NavigationProp<UserDrawerParamsList, SCREENS.selectedPhoto>
+    >();
+
   const dispatch = useDispatch();
 
   const {colors} = useContext(ThemeContext);
 
   const bgColor = {backgroundColor: colors.background};
+
+  const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
 
   const onRefresh = () => {
     setIsRefreshing(true);
@@ -61,56 +56,67 @@ export const PhotoScreen: React.FC = () => {
     });
   };
 
-  const keyExtractor = (item: IApiData, index: number) => item.id + index;
+  const moveToPhotoPage = (id: string) =>
+    navigation.navigate(SCREENS.selectedPhoto, {photoId: id});
 
-  const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
+  const onEndReached = () => {
+    if (!onEndReachedCalledDuringMomentum) {
+      getPhotos();
+      setOnEndReachedCalledDuringMomentum(true);
+    }
+  };
+
+  const onMomentumScrollBegin = () =>
+    setOnEndReachedCalledDuringMomentum(false);
 
   useEffect(() => {
     getPhotos();
   }, [getPhotos]);
 
-  useEffect(() => {
-    const photoObj = splitPhotoArray(photoData);
-    setPhotos(photoObj);
-  }, [photoData]);
+  const renderItem = ({item, i}: {item: IApiData; i: number}) => {
+    const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
 
-  console.log(isError);
+    return (
+      <View style={styles.imgWrapperStyle} key={item.id + i}>
+        <TouchableHighlight
+          onPress={() => moveToPhotoPage(item.id)}
+          underlayColor="#fff"
+          style={styles.touchableBorder}>
+          <Image
+            style={styles.imgStyle}
+            source={{
+              uri: item?.urls?.regular,
+              height: heightImg,
+            }}
+          />
+        </TouchableHighlight>
+      </View>
+    );
+  };
 
   const renderView = (
-    <MyScrollView isRefreshing={isRefreshing} onRefresh={onRefresh}>
-      <View style={[styles.scrollWrapper, bgColor]}>
-        <View style={styles.firstColumn}>
-          <FlatList
-            data={photos?.even}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            scrollEnabled={false}
-            listKey="first"
-          />
+    <View style={[styles.masonry, {...bgColor}]}>
+      <MasonryList
+        contentContainerStyle={{...bgColor}}
+        data={photoData}
+        numColumns={2}
+        renderItem={renderItem}
+        onEndReached={onEndReached}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}
+        onEndReachedThreshold={0.5}
+        onMomentumScrollBegin={onMomentumScrollBegin}
+      />
+      {isLoading && (
+        <View style={[styles.indicatorWrapper, bgColor]}>
+          <ActivityIndicator size="large" color={COLOR_ACTIVITY_INDICATOR} />
         </View>
-        <View style={styles.secondColumn}>
-          <FlatList
-            data={photos?.odd}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            scrollEnabled={false}
-            listKey="second"
-          />
-        </View>
-      </View>
-    </MyScrollView>
-  );
-
-  const renderIsloading = !isLoading ? (
-    renderView
-  ) : (
-    <View style={[styles.indicatorWrapper, bgColor]}>
-      <ActivityIndicator size="large" color={COLOR_ACTIVITY_INDICATOR} />
+      )}
     </View>
   );
 
   return !isError ? (
-    renderIsloading
+    renderView
   ) : (
     <View>
       <Text>Some Error</Text>
@@ -119,30 +125,32 @@ export const PhotoScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollWrapper: {
-    position: 'relative',
-    width: Dimensions.get('window').width,
-    flexDirection: 'row',
+  masonry: {
+    flex: 1,
     justifyContent: 'space-between',
+  },
+  scrollWrapper: {
+    width: Dimensions.get('window').width,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imgStyle: {
     width: Dimensions.get('window').width / 2.5,
     borderRadius: 10,
-    margin: 10,
-  },
-
-  firstColumn: {
-    width: Dimensions.get('window').width / 2,
-    position: 'relative',
-    alignItems: 'center',
-  },
-  secondColumn: {
-    width: Dimensions.get('window').width / 2,
-    alignItems: 'center',
+    overflow: 'hidden',
   },
 
   indicatorWrapper: {
     flex: 1,
     justifyContent: 'center',
+    paddingVertical: 20,
+  },
+
+  imgWrapperStyle: {
+    margin: 10,
+    alignItems: 'center',
+  },
+  touchableBorder: {
+    borderRadius: 10,
   },
 });
