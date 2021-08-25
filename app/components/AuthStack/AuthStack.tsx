@@ -7,25 +7,16 @@ import {RegistrationPage} from './RegistrationPage/RegistrationPage';
 
 const Stack = createStackNavigator();
 
-interface IAuthStackProp {
-  handleAuthWithoutReg: () => void;
-}
-
-export const AuthStack: React.FC<IAuthStackProp> = React.memo(
-  ({handleAuthWithoutReg}: IAuthStackProp) => {
-    return (
-      <SafeAreaView style={styles.wrapper}>
-        <Stack.Navigator initialRouteName={SCREENS.auth}>
-          <Stack.Screen
-            name={SCREENS.auth}
-            component={() => <AuthPage oNClickAuth={handleAuthWithoutReg} />}
-          />
-          <Stack.Screen name={SCREENS.signup} component={RegistrationPage} />
-        </Stack.Navigator>
-      </SafeAreaView>
-    );
-  },
-);
+export const AuthStack: React.FC = () => {
+  return (
+    <SafeAreaView style={styles.wrapper}>
+      <Stack.Navigator initialRouteName={SCREENS.auth}>
+        <Stack.Screen name={SCREENS.auth} component={AuthPage} />
+        <Stack.Screen name={SCREENS.signup} component={RegistrationPage} />
+      </Stack.Navigator>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   wrapper: {

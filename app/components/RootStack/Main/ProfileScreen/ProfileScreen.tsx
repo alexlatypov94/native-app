@@ -1,15 +1,27 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {UserSvg} from '../../../../assets/svg';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {signOut} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
+import {signOutProfile} from '../../../../store/action/authAction';
+import {IAppState} from '../../../../store/types';
+import {DEFAULT_USER} from '../../../constants/constants';
 
 export const ProfileScreen: React.FC = () => {
   const [userInfo, setUserInfo] = useState<any>({});
   const {colors} = useContext(ThemeContext);
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
+  const {isAuthWithoutReg} = useSelector(
+    (state: IAppState) => state.authReducer,
+  );
+
+  const name = isAuthWithoutReg ? DEFAULT_USER.name : userInfo.userName;
+  const surname = isAuthWithoutReg
+    ? DEFAULT_USER.surname
+    : userInfo.userSurName;
 
   const getData = async () => {
     try {
@@ -19,20 +31,24 @@ export const ProfileScreen: React.FC = () => {
     } catch (error) {}
   };
 
+  const dispatch = useDispatch();
+
+  const handleSignOut = useCallback(() => {
+    signOut();
+    dispatch(signOutProfile());
+  }, [dispatch]);
+
   useEffect(() => {
     getData();
   }, []);
 
-  console.log(userInfo);
-
   return (
     <View style={[styles.profileWrapper, bgColor]}>
-      <Text style={[styles.profileTitle, textColor]}>My Profile</Text>
       <UserSvg />
-      <Text style={[styles.userName, textColor]}>{userInfo.userName}</Text>
-      <Text style={[styles.userName, textColor]}>{userInfo.userSurName}</Text>
+      <Text style={[styles.userName, textColor]}>{name}</Text>
+      <Text style={[styles.userName, textColor]}>{surname}</Text>
       <View style={styles.singOutContainer}>
-        <TouchableHighlight onPress={signOut}>
+        <TouchableHighlight onPress={handleSignOut}>
           <View style={styles.signOutBtn}>
             <Text>Sign Out</Text>
           </View>

@@ -15,86 +15,87 @@ import {useInput} from '../../hooks';
 import {UserDrawerParamsList} from '../../interface';
 import {emailValidator, signIn} from '../../utils/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {setAuth, setAuthWithoutReg} from '../../../store/action/authAction';
 
-interface IAuthProp {
-  oNClickAuth: () => void;
-}
+export const AuthPage: React.FC = () => {
+  const navigator =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
 
-export const AuthPage: React.FC<IAuthProp> = React.memo(
-  ({oNClickAuth}: IAuthProp) => {
-    const navigator =
-      useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
+  const [inValidEmail, setInValidEmail] = useState(false);
 
-    const [inValidEmail, setInValidEmail] = useState(false);
+  const email = useInput('');
+  const password = useInput('');
 
-    const email = useInput('');
-    const password = useInput('');
+  const dispatch = useDispatch();
+  const handleAuthWithoutReg = () => dispatch(setAuthWithoutReg());
+  const handleAuth = () => dispatch(setAuth(true));
 
-    const storeData = async () => {
-      try {
-        await AsyncStorage.setItem('email', email.value);
-      } catch (error) {
-        Alert.alert(error);
-      }
-    };
+  const storeData = async () => {
+    try {
+      await AsyncStorage.setItem('email', email.value);
+    } catch (error) {
+      Alert.alert(error);
+    }
+  };
 
-    const handlePress = () => {
-      const checkEmail = emailValidator(email.value);
-      if (checkEmail) {
-        signIn(email.value, password.value);
-        storeData();
-      } else {
-        setInValidEmail(true);
-      }
-    };
+  const handlePress = () => {
+    const checkEmail = emailValidator(email.value);
+    if (checkEmail) {
+      signIn(email.value, password.value);
+      storeData();
+      handleAuth();
+    } else {
+      setInValidEmail(true);
+    }
+  };
 
-    const handleMoveReg = () => {
-      navigator.navigate(SCREENS.signup);
-    };
+  const handleMoveReg = () => {
+    navigator.navigate(SCREENS.signup);
+  };
 
-    return (
-      <View style={styles.wrapper}>
-        <TextInput
-          style={styles.inputField}
-          placeholder="E-mail"
-          autoCapitalize="none"
-          {...email}
-        />
-        {inValidEmail && (
-          <Text style={styles.invalidEmail}>email is invalid</Text>
-        )}
-        <TextInput
-          style={styles.inputField}
-          placeholder="Password"
-          secureTextEntry={true}
-          autoCapitalize="none"
-          {...password}
-        />
-        <Button onPress={handlePress} title="Log in" />
-        <View style={styles.touchContainer}>
-          <TouchableHighlight
-            onPress={handleMoveReg}
-            underlayColor={UNDERLAY_COLOR_AUTH}
-            style={styles.touchRadius}>
-            <View style={styles.moveRegStyle}>
-              <Text>Sign Up</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.touchContainer}>
-          <TouchableHighlight
-            onPress={oNClickAuth}
-            underlayColor={UNDERLAY_COLOR_AUTH}
-            style={styles.touchRadius}>
-            <View style={styles.moveRegStyle}>
-              <Text>Continue without registration</Text>
-            </View>
-          </TouchableHighlight>
-        </View>
+  return (
+    <View style={styles.wrapper}>
+      <TextInput
+        style={styles.inputField}
+        placeholder="E-mail"
+        autoCapitalize="none"
+        {...email}
+      />
+      {inValidEmail && (
+        <Text style={styles.invalidEmail}>email is invalid</Text>
+      )}
+      <TextInput
+        style={styles.inputField}
+        placeholder="Password"
+        secureTextEntry={true}
+        autoCapitalize="none"
+        {...password}
+      />
+      <Button onPress={handlePress} title="Log in" />
+      <View style={styles.touchContainer}>
+        <TouchableHighlight
+          onPress={handleMoveReg}
+          underlayColor={UNDERLAY_COLOR_AUTH}
+          style={styles.touchRadius}>
+          <View style={styles.moveRegStyle}>
+            <Text>Sign Up</Text>
+          </View>
+        </TouchableHighlight>
       </View>
-    );
-  },
-);
+      <View style={styles.touchContainer}>
+        <TouchableHighlight
+          onPress={handleAuthWithoutReg}
+          underlayColor={UNDERLAY_COLOR_AUTH}
+          style={styles.touchRadius}>
+          <View style={styles.moveRegStyle}>
+            <Text>Continue without registration</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   wrapper: {
