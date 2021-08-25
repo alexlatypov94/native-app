@@ -9,14 +9,14 @@ import {SettingsScreen} from './Main/SettingsScreen/SettingsScreen';
 import {StartScreen} from './Main/StartScreen/StartScreen';
 import {ModalWindow} from './ModalWindow/ModalWindow';
 import {UserMenu} from './UserMenu/UserMenu';
-import {
-  createDrawerNavigator,
-  DrawerNavigationOptions,
-} from '@react-navigation/drawer';
 import {Filter} from './Filter/Filter';
 import {SelectedPhoto} from './Main/SelectedPhoto/SelectedPhoto';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
 
-const Drawer = createDrawerNavigator<UserDrawerParamsList>();
+const Stack = createStackNavigator<UserDrawerParamsList>();
 
 export const RootStack: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -29,7 +29,7 @@ export const RootStack: React.FC = () => {
   const bgColor = {backgroundColor: colors.background};
   const tintColor = colors.tintColor;
   const textColor = {color: colors.text};
-  const screenOptions: DrawerNavigationOptions = {
+  const screenOptions: StackNavigationOptions = {
     headerTintColor: tintColor,
     headerStyle: {
       ...bgColor,
@@ -38,8 +38,6 @@ export const RootStack: React.FC = () => {
     },
     headerTitleAlign: 'center',
     headerTitleStyle: textColor,
-    drawerStyle: bgColor,
-    drawerLabelStyle: textColor,
   };
 
   const headerRight = () => <Filter onVisibleModal={handleModalVisible} />;
@@ -51,11 +49,11 @@ export const RootStack: React.FC = () => {
           isVisible={isVisible}
           onChangeVisible={handleModalVisible}
         />
-        <Drawer.Navigator
+        <Stack.Navigator
           initialRouteName={SCREENS.start}
           screenOptions={screenOptions}>
-          <Drawer.Screen name={SCREENS.start} component={StartScreen} />
-          <Drawer.Screen
+          <Stack.Screen name={SCREENS.start} component={StartScreen} />
+          <Stack.Screen
             name={SCREENS.photos}
             component={PhotoScreen}
             options={{
@@ -63,18 +61,18 @@ export const RootStack: React.FC = () => {
               title: 'My Studio',
             }}
           />
-          <Drawer.Screen
+          <Stack.Screen
             name={SCREENS.profile}
             component={ProfileScreen}
             options={{title: 'My Profile'}}
           />
-          <Drawer.Screen name={SCREENS.settings} component={SettingsScreen} />
-          <Drawer.Screen
+          <Stack.Screen name={SCREENS.settings} component={SettingsScreen} />
+          <Stack.Screen
             name={SCREENS.selectedPhoto}
             component={SelectedPhoto}
             options={{headerShown: false}}
           />
-        </Drawer.Navigator>
+        </Stack.Navigator>
       </View>
       <UserMenu />
     </SafeAreaView>

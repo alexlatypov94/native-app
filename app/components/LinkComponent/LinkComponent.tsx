@@ -9,7 +9,7 @@ interface ILinkComponentProp {
 
 export const LinkComponent: React.FC<ILinkComponentProp> = React.memo(
   ({url, icon}: ILinkComponentProp) => {
-    const isCorrectUrl = url.split('/').includes('null');
+    const isCorrectUrl = url ? url.split('/').includes('null') : false;
 
     const handleRedirect = async () => {
       const isOpenedUrl = await Linking.canOpenURL(url);
