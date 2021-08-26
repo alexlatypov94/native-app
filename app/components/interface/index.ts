@@ -19,6 +19,7 @@ export interface IApiData {
   user: IUser;
   width: number;
   idColumn?: string;
+  liked?: boolean;
 }
 
 interface ILinksApiData {

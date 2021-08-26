@@ -9,13 +9,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {ThemeContext} from '../../../context/ThemeContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {SCREENS} from '../../../constants/constants';
-import {UserDrawerParamsList} from '../../../interface';
+import {IApiData, UserDrawerParamsList} from '../../../interface';
 import {IAppState} from '../../../../store/types';
 import {LinkComponent} from '../../../LinkComponent/LinkComponent';
+import {addLikedPhoto} from '../../../../store/action/likedPhotoActions';
 
 type Props = NativeStackScreenProps<
   UserDrawerParamsList,
@@ -23,12 +24,20 @@ type Props = NativeStackScreenProps<
 >;
 
 export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
-  const [isTouchable, setIsTouchable] = useState(false);
   const {photoId} = route.params;
   const {colors} = useContext(ThemeContext);
   const photoData = useSelector((store: IAppState) =>
-    store.photosReducer.photoData.find(el => el.id === photoId),
+    store.photosReducer.photoData.find(el => el?.id === photoId),
   );
+
+  const storage = useSelector(
+    (state: IAppState) => state.likedPhotoReducer.likedPhotoData,
+  );
+  const isLiked = storage?.find((el: IApiData) => el?.id === photoId);
+
+  console.log(storage.filter(el => el && el.liked_by_user));
+
+  const [isTouchable, setIsTouchable] = useState(false);
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;
   const twitterUrl = `https://twitter.com/${photoData?.user.social.twitter_username}`;
@@ -42,8 +51,11 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
     height: Dimensions.get('window').height / 2,
   };
 
+  const dispatch = useDispatch();
+
   const handleTouch = () => {
     setIsTouchable(!isTouchable);
+    dispatch(addLikedPhoto(photoData as IApiData, !isTouchable));
   };
 
   return (
@@ -61,7 +73,7 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
         </View>
         <View style={styles.iconsWrapper}>
           <TouchableOpacity onPress={handleTouch}>
-            {isTouchable ? (
+            {isLiked?.liked_by_user ? (
               <MaterialCommunityIcons name="heart" color="#e63b3b" size={44} />
             ) : (
               <MaterialCommunityIcons

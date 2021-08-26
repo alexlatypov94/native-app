@@ -6,11 +6,11 @@ import {
   Text,
   ScrollView,
   TextInput,
-  Alert,
 } from 'react-native';
 import {useInput} from '../../hooks';
 import {createUser, emailValidator} from '../../utils/index';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {registration} from '../../../store/action/authAction';
 
 export const RegistrationPage: React.FC = () => {
   const [inValidEmail, setInvalidEmail] = useState<boolean>(false);
@@ -19,15 +19,9 @@ export const RegistrationPage: React.FC = () => {
   const email = useInput('');
   const password = useInput('');
   const confirmPassword = useInput('');
-
-  const storeData = async (userName: string, userSurName: string) => {
-    try {
-      const userData = JSON.stringify({userName, userSurName});
-      await AsyncStorage.setItem(email.value, userData);
-      await AsyncStorage.setItem('email', email.value);
-    } catch (error) {
-      Alert.alert(error);
-    }
+  const dispatch = useDispatch();
+  const storeData = (userName: string, userSurname: string) => {
+    dispatch(registration({name: userName, surname: userSurname}));
   };
 
   const handleSignUp = () => {

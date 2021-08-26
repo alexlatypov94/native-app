@@ -14,6 +14,7 @@ export const StartScreen: React.FC = () => {
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.photos>>();
 
   const handleNavigation = () => {
+    console.log(1);
     navigation.navigate(SCREENS.photos);
   };
 
@@ -45,6 +46,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 100,
   },
   buttonTextStyle: {
     position: 'relative',
