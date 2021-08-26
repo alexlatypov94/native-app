@@ -14,6 +14,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -24,6 +25,9 @@ export const RootStack: React.FC = () => {
   const handleModalVisible = useCallback(() => {
     setIsVisible(!isVisible);
   }, [isVisible]);
+
+  const store = useSelector(state => state);
+  console.log(store);
 
   const bgColor = {backgroundColor: colors.background};
   const tintColor = colors.tintColor;

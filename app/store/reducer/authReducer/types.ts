@@ -1,8 +1,8 @@
 export interface IAuthState {
   isAut: boolean;
   isAuthWithoutReg: boolean;
-  name: string | undefined;
-  surname: string | undefined;
+  name: string;
+  surname: string;
 }
 
 export enum AuthActionTypes {

@@ -3,11 +3,12 @@ import {IAuthState, AuthActionTypes, IAuthAction} from './types';
 const initialState: IAuthState = {
   isAut: false,
   isAuthWithoutReg: false,
-  name: undefined,
-  surname: undefined,
+  name: '',
+  surname: '',
 };
 
 const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
+  console.log(action);
   switch (action.type) {
     case AuthActionTypes.AUTHORIZATION:
       return {...state, isAut: action.payload};
