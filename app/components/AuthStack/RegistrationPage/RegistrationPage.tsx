@@ -29,7 +29,6 @@ export const RegistrationPage: React.FC = () => {
     if (checkEmail && password.value === confirmPassword.value) {
       createUser(email.value, password.value);
       storeData(name.value, surname.value);
-      console.log('signup');
     } else {
       setInvalidEmail(true);
     }

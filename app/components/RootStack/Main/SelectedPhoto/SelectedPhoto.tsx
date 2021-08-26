@@ -35,8 +35,6 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
   );
   const isLiked = storage?.find((el: IApiData) => el?.id === photoId);
 
-  console.log(storage.filter(el => el && el.liked_by_user));
-
   const [isTouchable, setIsTouchable] = useState(false);
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;

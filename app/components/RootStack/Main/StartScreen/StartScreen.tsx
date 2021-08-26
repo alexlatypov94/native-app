@@ -14,7 +14,6 @@ export const StartScreen: React.FC = () => {
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.photos>>();
 
   const handleNavigation = () => {
-    console.log(1);
     navigation.navigate(SCREENS.photos);
   };
 

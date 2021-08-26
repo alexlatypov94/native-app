@@ -31,8 +31,6 @@ export const PhotoScreen: React.FC = () => {
     (state: IAppState) => state.photosReducer,
   );
 
-  const store = useSelector(state => state);
-  console.log(store);
   const [
     onEndReachedCalledDuringMomentum,
     setOnEndReachedCalledDuringMomentum,

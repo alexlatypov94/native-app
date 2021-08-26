@@ -34,7 +34,6 @@ const helper = (storageData: IApiData[], payload: IApiData) => {
   const foundedPhoto = storageData?.find(
     (el: IApiData) => el?.id === payload?.id,
   );
-  console.log(storageData);
   if (foundedPhoto) {
     return storageData?.map((el: IApiData) => {
       if (el?.id === payload?.id) {
