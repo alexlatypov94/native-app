@@ -16,20 +16,35 @@ import {
 } from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {useDispatch, useSelector} from 'react-redux';
-import {startRequest} from '../../../../store/action/photosAction';
+import {
+  onClearPhotoData,
+  startRequest,
+} from '../../../../store/action/photosAction';
 import {IAppState} from '../../../../store/types';
 import MasonryList from '@react-native-seoul/masonry-list';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const wait = (timeout: number) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 };
 
-export const PhotoScreen: React.FC = () => {
+type Props = NativeStackScreenProps<
+  UserDrawerParamsList,
+  SCREENS.photos | SCREENS.topPhotos | SCREENS.newPhotos
+>;
+
+export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {photoData, isError, isLoading} = useSelector(
     (state: IAppState) => state.photosReducer,
   );
+
+  // console.log(route);
+
+  const [page, setPage] = useState<number>(1);
+
+  console.log(photoData);
 
   const [
     onEndReachedCalledDuringMomentum,
@@ -47,21 +62,29 @@ export const PhotoScreen: React.FC = () => {
 
   const bgColor = {backgroundColor: colors.background};
 
-  const getPhotos = useCallback(() => dispatch(startRequest()), [dispatch]);
+  const getPhotos = useCallback(
+    (value: string, numPage: number) => dispatch(startRequest(value, numPage)),
+    [dispatch],
+  );
 
   const onRefresh = () => {
     setIsRefreshing(true);
+    dispatch(onClearPhotoData());
+    setPage(1);
+    getPhotos(route.name, page);
     wait(2000).then(() => {
       setIsRefreshing(false);
     });
   };
 
-  const moveToPhotoPage = (id: string) =>
-    navigation.navigate(SCREENS.selectedPhoto, {photoId: id});
+  const moveToPhotoPage = (item: IApiData) => {
+    console.log(item);
+    navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
+  };
 
   const onEndReached = () => {
     if (!onEndReachedCalledDuringMomentum) {
-      getPhotos();
+      setPage(page + 1);
       setOnEndReachedCalledDuringMomentum(true);
     }
   };
@@ -70,8 +93,12 @@ export const PhotoScreen: React.FC = () => {
     setOnEndReachedCalledDuringMomentum(false);
 
   useEffect(() => {
-    getPhotos();
-  }, [getPhotos]);
+    dispatch(onClearPhotoData());
+  }, [dispatch, route.name]);
+
+  useEffect(() => {
+    getPhotos(route.name, page);
+  }, [getPhotos, page, route.name]);
 
   const renderItem = ({item, i}: {item: IApiData; i: number}) => {
     const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
@@ -79,7 +106,7 @@ export const PhotoScreen: React.FC = () => {
     return (
       <View style={styles.imgWrapperStyle} key={item.id + i}>
         <TouchableHighlight
-          onPress={() => moveToPhotoPage(item.id)}
+          onPress={() => moveToPhotoPage(item)}
           underlayColor="#fff"
           style={styles.touchableBorder}>
           <Image
@@ -104,7 +131,7 @@ export const PhotoScreen: React.FC = () => {
         onEndReached={onEndReached}
         refreshing={isRefreshing}
         onRefresh={onRefresh}
-        onEndReachedThreshold={0.5}
+        // onEndReachedThreshold={0.5}
         onMomentumScrollBegin={onMomentumScrollBegin}
       />
       {isLoading && (

@@ -9,9 +9,13 @@ import {FilterSvg} from './../../assets/svg/FilterSvg';
 export enum SCREENS {
   start = 'Start',
   photos = 'Photos',
+  topPhotos = 'TopPhoto',
+  newPhotos = 'NewPhoto',
   profile = 'Profile',
   settings = 'Settings',
   selectedPhoto = 'SelectedPhoto',
+  likedPhoto = 'likedPhoto',
+  dispatcherScreen = 'DispatcherScreen',
   auth = 'Authorization',
   signup = 'Registration',
 }
