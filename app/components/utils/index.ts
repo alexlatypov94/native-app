@@ -4,3 +4,6 @@ export * from './emailValidator';
 export * from './createUser';
 export * from './signIn';
 export * from './signOut';
+export * from './addUserToDataBase';
+export * from './addPhotoToDatabase';
+export * from './removePhotoFromDatabase';

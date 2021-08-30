@@ -18,7 +18,6 @@ export const StartScreen: React.FC = () => {
     >();
 
   const handleNavigation = () => {
-    console.log(1);
     navigation.navigate(SCREENS.dispatcherScreen);
   };
 

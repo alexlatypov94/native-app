@@ -40,11 +40,7 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
     (state: IAppState) => state.photosReducer,
   );
 
-  // console.log(route);
-
   const [page, setPage] = useState<number>(1);
-
-  console.log(photoData);
 
   const [
     onEndReachedCalledDuringMomentum,
@@ -78,7 +74,6 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   };
 
   const moveToPhotoPage = (item: IApiData) => {
-    console.log(item);
     navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
   };
 
@@ -131,7 +126,6 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
         onEndReached={onEndReached}
         refreshing={isRefreshing}
         onRefresh={onRefresh}
-        // onEndReachedThreshold={0.5}
         onMomentumScrollBegin={onMomentumScrollBegin}
       />
       {isLoading && (

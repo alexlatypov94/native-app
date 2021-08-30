@@ -1,6 +1,6 @@
 import MasonryList from '@react-native-seoul/masonry-list';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   TouchableHighlight,
@@ -13,13 +13,26 @@ import {IAppState} from '../../../../store/types';
 import {PHOTO_HEIGHT, SCREENS} from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {IApiData, UserDrawerParamsList} from '../../../interface';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {getPhotoFromDatabase} from '../../../utils/getPhotoFromDatabase';
 
 export const LikedPhotoScreen: React.FC = () => {
+  const [photoData, setPhotoData] = useState<IApiData[]>([]);
   const {likedPhotoData} = useSelector(
     (state: IAppState) => state.likedPhotoReducer,
   );
 
-  console.log(likedPhotoData);
+  const {isConnected} = useNetInfo();
+
+  const {id} = useSelector((state: IAppState) => state.authReducer);
+
+  useEffect(() => {
+    if (isConnected) {
+      getPhotoFromDatabase(id).then(res => setPhotoData(res?.photoData));
+    } else {
+      setPhotoData(likedPhotoData);
+    }
+  }, [id, isConnected, likedPhotoData]);
 
   const navigation =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
@@ -28,11 +41,11 @@ export const LikedPhotoScreen: React.FC = () => {
 
   const bgColor = {backgroundColor: colors.background};
 
+  const moveToPhotoPage = (item: IApiData) =>
+    navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
+
   const renderItem = ({item, i}: {item: IApiData; i: number}) => {
     const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
-
-    const moveToPhotoPage = (item: IApiData) =>
-      navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
 
     return (
       <View style={styles.imgWrapperStyle} key={item.id + i}>
@@ -51,10 +64,11 @@ export const LikedPhotoScreen: React.FC = () => {
       </View>
     );
   };
+
   return (
     <View style={[styles.masonry, {...bgColor}]}>
       <MasonryList
-        data={likedPhotoData}
+        data={photoData}
         renderItem={renderItem}
         contentContainerStyle={{...bgColor}}
         numColumns={2}

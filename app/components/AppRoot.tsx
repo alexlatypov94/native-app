@@ -18,29 +18,49 @@ import {IAppState} from '../store/types';
 import {RootStack} from './RootStack/RootStack';
 import {AuthStack} from './AuthStack/AuthStack';
 import {setAuth} from '../store/action/authAction';
+import firestore from '@react-native-firebase/firestore';
+import {IUserInfoDB} from './interface';
 
 const AppRoot = () => {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
+  const [userInfo, setUserInfo] = useState<IUserInfoDB>({
+    name: '',
+    surname: '',
+  });
 
-  const {isAut} = useSelector((state: IAppState) => state.authReducer);
+  const {isAuth} = useSelector((state: IAppState) => state.authReducer);
 
   const dispatch = useDispatch();
   const setAuthorization = useCallback(
-    (value: boolean) => {
-      dispatch(setAuth(value));
+    (
+      value: boolean,
+      id: string = '',
+      name: string = '',
+      surname: string = '',
+    ) => {
+      dispatch(setAuth(value, id, name, surname));
     },
     [dispatch],
   );
   useEffect(() => {
     auth().onAuthStateChanged(user => {
       if (user) {
-        setAuthorization(true);
+        firestore()
+          .collection('users')
+          .doc(user?.uid)
+          .get()
+          .then(res => {
+            const data = res.data();
+            setUserInfo({name: data?.name, surname: data?.surname});
+          });
+
+        setAuthorization(true, user.uid, userInfo?.name, userInfo?.surname);
       } else {
         setAuthorization(false);
       }
     });
-  }, [setAuthorization]);
+  }, [setAuthorization, userInfo?.name, userInfo?.surname]);
 
   const defaultTheme = {
     isDark,
@@ -51,7 +71,7 @@ const AppRoot = () => {
   return (
     <ThemeContext.Provider value={defaultTheme}>
       <NavigationContainer>
-        {isAut ? <RootStack /> : <AuthStack />}
+        {isAuth ? <RootStack /> : <AuthStack />}
       </NavigationContainer>
     </ThemeContext.Provider>
   );

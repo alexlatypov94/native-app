@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import {useInput} from '../../hooks';
-import {createUser, emailValidator} from '../../utils/index';
+import {addUserToDataBase, createUser, emailValidator} from '../../utils/index';
 import {useDispatch} from 'react-redux';
 import {registration} from '../../../store/action/authAction';
 
@@ -27,8 +27,10 @@ export const RegistrationPage: React.FC = () => {
   const handleSignUp = () => {
     const checkEmail = emailValidator(email.value);
     if (checkEmail && password.value === confirmPassword.value) {
+      console.log('called');
       createUser(email.value, password.value);
       storeData(name.value, surname.value);
+      addUserToDataBase({name: name.value, surname: surname.value});
     } else {
       setInvalidEmail(true);
     }
