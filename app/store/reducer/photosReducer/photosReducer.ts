@@ -4,6 +4,7 @@ const initialState: IPhotosReducerState = {
   photoData: [],
   isLoading: false,
   isError: false,
+  searchValue: '',
 };
 
 const photosReducer = (
@@ -59,6 +60,8 @@ const photosReducer = (
       return {...state, isError: true};
     case PhotosActionTypes.ON_CLEAR_PHOTO_DATA:
       return {...state, photoData: []};
+    case PhotosActionTypes.ADD_SEARCH_VALUE:
+      return {...state, searchValue: action.payload.searchValue};
     default:
       return state;
   }

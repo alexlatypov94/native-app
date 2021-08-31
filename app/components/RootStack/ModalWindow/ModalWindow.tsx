@@ -1,3 +1,4 @@
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {useState, useContext} from 'react';
 import {
   Modal,
@@ -6,8 +7,16 @@ import {
   Text,
   Pressable,
   TextInput,
+  Button,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
+import {
+  addSearchValue,
+  onClearPhotoData,
+} from '../../../store/action/photosAction';
+import {SCREENS} from '../../constants/constants';
 import {ThemeContext} from '../../context/ThemeContext';
+import {UserDrawerParamsList} from '../../interface';
 
 interface IModalProp {
   isVisible: boolean;
@@ -20,6 +29,8 @@ export const ModalWindow: React.FC<IModalProp> = React.memo(
 
     const {colors} = useContext(ThemeContext);
 
+    const dispatch = useDispatch();
+
     const bgColor = {backgroundColor: colors.background};
     const btnStyle = ({pressed}: {pressed: boolean}) => [
       {backgroundColor: pressed ? '#5a58dfb0' : '#5a58df'},
@@ -27,8 +38,19 @@ export const ModalWindow: React.FC<IModalProp> = React.memo(
     ];
     const textInputStyle = {color: colors.text, borderBottomColor: colors.text};
 
+    const navigation =
+      useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.photos>>();
+
     const handleHideModal = () => {
       setValue('');
+      onChangeVisible();
+    };
+
+    const handleSearch = () => {
+      dispatch(addSearchValue(value));
+      dispatch(onClearPhotoData());
+      setValue('');
+      navigation.navigate(SCREENS.photos);
       onChangeVisible();
     };
 
@@ -45,6 +67,7 @@ export const ModalWindow: React.FC<IModalProp> = React.memo(
             onChangeText={setValue}
             autoCapitalize="none"
           />
+          <Button title="show photo" onPress={handleSearch} />
         </View>
       </Modal>
     );
@@ -69,6 +92,6 @@ const styles = StyleSheet.create({
     width: '80%',
     borderBottomWidth: 2,
     fontSize: 18,
-    marginVertical: 10,
+    marginVertical: 20,
   },
 });

@@ -13,6 +13,7 @@ function* photoWorker(action: IPhotosAction) {
       getPhotos,
       action.payload.value,
       action.payload.page,
+      action.payload.searchValue,
     );
     yield put({
       type: PhotosActionTypes.GET_REQUEST_SUCCESS,

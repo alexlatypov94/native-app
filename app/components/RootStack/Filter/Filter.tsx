@@ -1,9 +1,8 @@
 import React from 'react';
 import {useContext} from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {FilterSvg} from '../../../assets/svg';
 import {ThemeContext} from '../../context/ThemeContext';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 interface IFilterProp {
   onVisibleModal: () => void;
 }
@@ -16,7 +15,11 @@ export const Filter: React.FC<IFilterProp> = React.memo(
       <View>
         <TouchableWithoutFeedback onPress={onVisibleModal}>
           <View style={styles.filter}>
-            <FilterSvg color={color} />
+            <MaterialCommunityIcons
+              name="filter-outline"
+              size={30}
+              color={color}
+            />
           </View>
         </TouchableWithoutFeedback>
       </View>

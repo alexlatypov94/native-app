@@ -51,8 +51,8 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
   );
 
   const isLiked = isConnected
-    ? storage.find((el: IApiData) => photoData.id === el.id)
-    : photoDB.find((el: IApiData) => photoData.id === el.id);
+    ? photoDB?.find((el: IApiData) => photoData.id === el.id)
+    : storage.find((el: IApiData) => photoData.id === el.id);
 
   const [isTouchable, setIsTouchable] = useState(isLiked?.liked_by_user);
 
@@ -60,9 +60,9 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
 
   const addOrRemovePhotoInDB = (isTouch: boolean) => {
     if (isTouch) {
-      addPhotoToDataBase(photoData, id);
+      addPhotoToDataBase({...photoData, liked_by_user: isTouch}, id);
     } else {
-      removePhotoFromDatabase(photoData, id);
+      removePhotoFromDatabase({...photoData, liked_by_user: !isTouch}, id);
     }
   };
 
@@ -74,7 +74,7 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
 
   useEffect(() => {
     getPhotoFromDatabase(id).then(res => setPhotoDB(res?.photoData));
-  }, [id]);
+  }, [id, isTouchable]);
 
   useEffect(() => {
     setIsTouchable(!!isLiked?.liked_by_user);

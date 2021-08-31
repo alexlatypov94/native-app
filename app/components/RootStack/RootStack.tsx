@@ -54,7 +54,8 @@ export const RootStack: React.FC = () => {
       <View style={styles.main}>
         <Tab.Navigator
           initialRouteName={SCREENS.start}
-          screenOptions={screenOptions}>
+          screenOptions={screenOptions}
+          backBehavior={'history'}>
           <Tab.Screen
             name={SCREENS.start}
             component={StartScreen}
