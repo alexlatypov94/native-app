@@ -33,6 +33,8 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
   const textColor = {color: colors.text};
   const {photoData} = route.params;
 
+  console.log(photoData);
+
   const {isConnected} = useNetInfo();
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;
@@ -54,21 +56,17 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
     ? storage.find((el: IApiData) => photoData.id === el.id)
     : photoDB.find((el: IApiData) => photoData.id === el.id);
 
-  const [isTouchable, setIsTouchable] = useState(
-    isLiked?.liked_by_user as boolean,
-  );
+  const [isTouchable, setIsTouchable] = useState(isLiked?.liked_by_user);
 
   const dispatch = useDispatch();
 
   const addOrRemovePhotoInDB = (isTouch: boolean) => {
     if (isTouch) {
-      addPhotoToDataBase({...photoData, liked_by_user: isTouch}, id);
+      addPhotoToDataBase(photoData, id);
     } else {
       removePhotoFromDatabase(photoData, id);
     }
   };
-
-  console.log(isTouchable);
 
   const handleTouch = () => {
     setIsTouchable(!isTouchable);
@@ -81,7 +79,7 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
   }, [id]);
 
   useEffect(() => {
-    setIsTouchable(!!isLiked?.liked_by_user as boolean);
+    setIsTouchable(!!isLiked?.liked_by_user);
   }, [photoData.liked_by_user, photoData, isLiked?.liked_by_user]);
 
   return (
