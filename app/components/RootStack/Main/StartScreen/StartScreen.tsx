@@ -54,25 +54,21 @@ export const StartScreen: React.FC = () => {
 
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
+  const animateStyle = {
+    transform: [
+      {
+        scale: startValueScale,
+      },
+    ],
+    opacity: startValueOpacity,
+  };
 
   return (
     <View style={[styles.startWrapper, bgColor]}>
       <TouchableWithoutFeedback onPress={handleNavigation}>
         <View style={styles.buttonStyle}>
           <Text style={[styles.buttonTextStyle, textColor]}>Welcome</Text>
-          <Animated.View
-            style={[
-              styles.roundWave,
-              {
-                transform: [
-                  {
-                    scale: startValueScale,
-                  },
-                ],
-                opacity: startValueOpacity,
-              },
-            ]}
-          />
+          <Animated.View style={[styles.roundWave, animateStyle]} />
         </View>
       </TouchableWithoutFeedback>
     </View>
