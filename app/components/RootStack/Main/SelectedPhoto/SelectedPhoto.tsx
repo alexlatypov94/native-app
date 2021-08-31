@@ -33,8 +33,6 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
   const textColor = {color: colors.text};
   const {photoData} = route.params;
 
-  console.log(photoData);
-
   const {isConnected} = useNetInfo();
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;

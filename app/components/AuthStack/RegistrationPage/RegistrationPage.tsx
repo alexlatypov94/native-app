@@ -27,7 +27,6 @@ export const RegistrationPage: React.FC = () => {
   const handleSignUp = () => {
     const checkEmail = emailValidator(email.value);
     if (checkEmail && password.value === confirmPassword.value) {
-      console.log('called');
       createUser(email.value, password.value);
       storeData(name.value, surname.value);
       addUserToDataBase({name: name.value, surname: surname.value});
