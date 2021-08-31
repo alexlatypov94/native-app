@@ -1,16 +1,14 @@
-import React, {useEffect, useState, useContext, useCallback} from 'react';
+import React, {useContext, useCallback} from 'react';
 import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
 import {UserSvg} from '../../../../assets/svg';
-import {ThemeContext} from '../../../context/ThemeContext';
-import {signOut} from '../../../utils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {signOutProfile} from '../../../../store/action/authAction';
 import {IAppState} from '../../../../store/types';
 import {DEFAULT_USER} from '../../../constants/constants';
+import {ThemeContext} from '../../../context/ThemeContext';
+import {signOut} from '../../../utils/signOut';
 
 export const ProfileScreen: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<any>({});
   const {colors} = useContext(ThemeContext);
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
@@ -18,18 +16,10 @@ export const ProfileScreen: React.FC = () => {
     (state: IAppState) => state.authReducer,
   );
 
-  const name = isAuthWithoutReg ? DEFAULT_USER.name : userInfo.userName;
-  const surname = isAuthWithoutReg
-    ? DEFAULT_USER.surname
-    : userInfo.userSurName;
+  const {name, surname} = useSelector((store: IAppState) => store.authReducer);
 
-  const getData = async () => {
-    try {
-      const currentEmail = await AsyncStorage.getItem('email');
-      const userData = await AsyncStorage.getItem(currentEmail as string);
-      setUserInfo(JSON.parse(userData as string));
-    } catch (error) {}
-  };
+  const userName = isAuthWithoutReg ? DEFAULT_USER.name : name;
+  const userSurname = isAuthWithoutReg ? DEFAULT_USER.surname : surname;
 
   const dispatch = useDispatch();
 
@@ -38,15 +28,11 @@ export const ProfileScreen: React.FC = () => {
     dispatch(signOutProfile());
   }, [dispatch]);
 
-  useEffect(() => {
-    getData();
-  }, []);
-
   return (
     <View style={[styles.profileWrapper, bgColor]}>
       <UserSvg />
-      <Text style={[styles.userName, textColor]}>{name}</Text>
-      <Text style={[styles.userName, textColor]}>{surname}</Text>
+      <Text style={[styles.userName, textColor]}>{userName}</Text>
+      <Text style={[styles.userName, textColor]}>{userSurname}</Text>
       <View style={styles.singOutContainer}>
         <TouchableHighlight onPress={handleSignOut}>
           <View style={styles.signOutBtn}>

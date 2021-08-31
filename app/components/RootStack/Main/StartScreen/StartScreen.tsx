@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 100,
   },
   buttonTextStyle: {
     position: 'relative',
