@@ -18,7 +18,6 @@ export const StartScreen: React.FC = () => {
     >();
 
   const handleNavigation = () => {
-    console.log(1);
     navigation.navigate(SCREENS.dispatcherScreen);
   };
 
@@ -32,7 +31,7 @@ export const StartScreen: React.FC = () => {
       <TouchableWithoutFeedback onPress={handleNavigation}>
         <View style={styles.buttonStyle}>
           <Text style={[styles.buttonTextStyle, textColor]}>Welcome</Text>
-          <View style={styles.roundWave} />
+          <View style={[styles.roundWave]} />
         </View>
       </TouchableWithoutFeedback>
     </View>

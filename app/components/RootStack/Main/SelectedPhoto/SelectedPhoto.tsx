@@ -17,6 +17,9 @@ import {IApiData, UserDrawerParamsList} from '../../../interface';
 import {IAppState} from '../../../../store/types';
 import {LinkComponent} from '../../../LinkComponent/LinkComponent';
 import {addLikedPhoto} from '../../../../store/action/likedPhotoActions';
+import {addPhotoToDataBase, removePhotoFromDatabase} from '../../../utils';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {getPhotoFromDatabase} from '../../../utils/getPhotoFromDatabase';
 
 type Props = NativeStackScreenProps<
   UserDrawerParamsList,
@@ -24,10 +27,13 @@ type Props = NativeStackScreenProps<
 >;
 
 export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
+  const [photoDB, setPhotoDB] = useState([]);
   const {colors} = useContext(ThemeContext);
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
   const {photoData} = route.params;
+
+  const {isConnected} = useNetInfo();
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;
   const twitterUrl = `https://twitter.com/${photoData?.user.social.twitter_username}`;
@@ -38,24 +44,41 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
     height: Dimensions.get('window').height / 2,
   };
 
+  const {id} = useSelector((store: IAppState) => store.authReducer);
+
   const storage = useSelector(
     (store: IAppState) => store.likedPhotoReducer.likedPhotoData,
   );
 
-  const isLiked = storage.find(el => photoData.id === el.id);
+  const isLiked = isConnected
+    ? storage.find((el: IApiData) => photoData.id === el.id)
+    : photoDB.find((el: IApiData) => photoData.id === el.id);
 
   const [isTouchable, setIsTouchable] = useState(isLiked?.liked_by_user);
 
   const dispatch = useDispatch();
 
+  const addOrRemovePhotoInDB = (isTouch: boolean) => {
+    if (isTouch) {
+      addPhotoToDataBase(photoData, id);
+    } else {
+      removePhotoFromDatabase(photoData, id);
+    }
+  };
+
   const handleTouch = () => {
     setIsTouchable(!isTouchable);
+    addOrRemovePhotoInDB(!isTouchable);
     dispatch(addLikedPhoto(photoData as IApiData, !isTouchable));
   };
 
   useEffect(() => {
-    setIsTouchable(photoData?.liked_by_user);
-  }, [photoData?.liked_by_user, photoData]);
+    getPhotoFromDatabase(id).then(res => setPhotoDB(res?.photoData));
+  }, [id]);
+
+  useEffect(() => {
+    setIsTouchable(!!isLiked?.liked_by_user);
+  }, [photoData.liked_by_user, photoData, isLiked?.liked_by_user]);
 
   return (
     <ScrollView style={[styles.container, bgColor]}>

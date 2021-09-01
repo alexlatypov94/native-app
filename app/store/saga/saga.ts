@@ -8,7 +8,6 @@ export function* watcher() {
 }
 
 function* photoWorker(action: IPhotosAction) {
-  console.log(action);
   try {
     const photos: IPhotosAction = yield call(
       getPhotos,

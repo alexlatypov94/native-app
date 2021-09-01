@@ -1,8 +1,9 @@
 import {IAuthState, AuthActionTypes, IAuthAction} from './types';
 
 const initialState: IAuthState = {
-  isAut: false,
+  isAuth: false,
   isAuthWithoutReg: false,
+  id: '',
   name: '',
   surname: '',
 };
@@ -10,7 +11,13 @@ const initialState: IAuthState = {
 const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
   switch (action.type) {
     case AuthActionTypes.AUTHORIZATION:
-      return {...state, isAut: action.payload};
+      return {
+        ...state,
+        isAuth: action.payload.isAuth,
+        id: action.payload.id,
+        name: action.payload.name,
+        surname: action.payload.surname,
+      };
     case AuthActionTypes.AUTH_WITHOUT_REG:
       return {...state, isAut: true, isAuthWithoutReg: true};
     case AuthActionTypes.SIGN_OUT_PROFILE:

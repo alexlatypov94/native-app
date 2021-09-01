@@ -7,14 +7,12 @@ import {
   Text,
   Dimensions,
   TextInput,
-  Alert,
 } from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {SCREENS, UNDERLAY_COLOR_AUTH} from '../../constants/constants';
 import {useInput} from '../../hooks';
 import {UserDrawerParamsList} from '../../interface';
 import {emailValidator, signIn} from '../../utils/index';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {setAuth, setAuthWithoutReg} from '../../../store/action/authAction';
 
@@ -31,19 +29,10 @@ export const AuthPage: React.FC = () => {
   const handleAuthWithoutReg = () => dispatch(setAuthWithoutReg());
   const handleAuth = () => dispatch(setAuth(true));
 
-  const storeData = async () => {
-    try {
-      await AsyncStorage.setItem('email', email.value);
-    } catch (error) {
-      Alert.alert(error);
-    }
-  };
-
   const handlePress = () => {
     const checkEmail = emailValidator(email.value);
     if (checkEmail) {
       signIn(email.value, password.value);
-      storeData();
       handleAuth();
     } else {
       setInValidEmail(true);

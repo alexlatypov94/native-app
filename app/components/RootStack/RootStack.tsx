@@ -89,6 +89,7 @@ export const RootStack: React.FC = () => {
             options={{
               title: 'Liked photos',
               tabBarItemStyle: {display: 'none'},
+              unmountOnBlur: true,
             }}
           />
         </Tab.Navigator>

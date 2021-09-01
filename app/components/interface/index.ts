@@ -124,3 +124,8 @@ export type UserDrawerParamsList = {
   [SCREENS.auth]: undefined;
   [SCREENS.signup]: undefined;
 };
+
+export interface IUserInfoDB {
+  name: string;
+  surname: string;
+}
