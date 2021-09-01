@@ -4,9 +4,11 @@ import {UserSvg} from '../../../../assets/svg';
 import {useDispatch, useSelector} from 'react-redux';
 import {signOutProfile} from '../../../../store/action/authAction';
 import {IAppState} from '../../../../store/types';
-import {DEFAULT_USER} from '../../../constants/constants';
+import {DEFAULT_USER, SCREENS} from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {signOut} from '../../../utils/signOut';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {UserDrawerParamsList} from '../../../interface';
 
 export const ProfileScreen: React.FC = () => {
   const {colors} = useContext(ThemeContext);
@@ -15,6 +17,9 @@ export const ProfileScreen: React.FC = () => {
   const {isAuthWithoutReg} = useSelector(
     (state: IAppState) => state.authReducer,
   );
+
+  const navigation =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
 
   const {name, surname} = useSelector((store: IAppState) => store.authReducer);
 
@@ -28,6 +33,10 @@ export const ProfileScreen: React.FC = () => {
     dispatch(signOutProfile());
   }, [dispatch]);
 
+  const handleMoveLikedPhoto = () => {
+    navigation.navigate(SCREENS.likedPhoto);
+  };
+
   return (
     <View style={[styles.profileWrapper, bgColor]}>
       <UserSvg />
@@ -37,6 +46,13 @@ export const ProfileScreen: React.FC = () => {
         <TouchableHighlight onPress={handleSignOut}>
           <View style={styles.signOutBtn}>
             <Text>Sign Out</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+      <View style={styles.singOutContainer}>
+        <TouchableHighlight onPress={handleMoveLikedPhoto}>
+          <View style={styles.signOutBtn}>
+            <Text>Check my photo</Text>
           </View>
         </TouchableHighlight>
       </View>

@@ -1,33 +1,23 @@
-import React, {useState, useCallback, useContext} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View, SafeAreaView} from 'react-native';
 import {SCREENS} from '../constants/constants';
 import {ThemeContext} from '../context/ThemeContext';
-import {PhotoScreen} from './Main/PhotoScreen/PhotoScreen';
 import {ProfileScreen} from './Main/ProfileScreen/ProfileScreen';
 import {SettingsScreen} from './Main/SettingsScreen/SettingsScreen';
 import {StartScreen} from './Main/StartScreen/StartScreen';
-import {ModalWindow} from './ModalWindow/ModalWindow';
-import {Filter} from './Filter/Filter';
 import {SelectedPhoto} from './Main/SelectedPhoto/SelectedPhoto';
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
+import {LikedPhotoScreen} from './Main/LikedPhotoScreen/LikedPhotoScreen';
+import {DispatcherScreen} from './Main/PhotoScreen/DispatcherScreen';
 
 const Tab = createBottomTabNavigator();
 
 export const RootStack: React.FC = () => {
-  const [isVisible, setIsVisible] = useState<boolean>(false);
   const {colors} = useContext(ThemeContext);
-
-  const handleModalVisible = useCallback(() => {
-    setIsVisible(!isVisible);
-  }, [isVisible]);
-
-  const store = useSelector(state => state);
-  console.log(store);
 
   const bgColor = {backgroundColor: colors.background};
   const tintColor = colors.tintColor;
@@ -59,15 +49,9 @@ export const RootStack: React.FC = () => {
     headerTitleStyle: textColor,
   };
 
-  const headerRight = () => <Filter onVisibleModal={handleModalVisible} />;
-
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.main}>
-        <ModalWindow
-          isVisible={isVisible}
-          onChangeVisible={handleModalVisible}
-        />
         <Tab.Navigator
           initialRouteName={SCREENS.start}
           screenOptions={screenOptions}>
@@ -77,11 +61,10 @@ export const RootStack: React.FC = () => {
             options={{tabBarIcon: homeIcon}}
           />
           <Tab.Screen
-            name={SCREENS.photos}
-            component={PhotoScreen}
+            name={SCREENS.dispatcherScreen}
+            component={DispatcherScreen}
             options={{
-              headerRight: headerRight,
-              title: 'My Studio',
+              headerShown: false,
               tabBarIcon: galeryIcon,
             }}
           />
@@ -100,9 +83,16 @@ export const RootStack: React.FC = () => {
             component={SelectedPhoto}
             options={{headerShown: false, tabBarItemStyle: {display: 'none'}}}
           />
+          <Tab.Screen
+            name={SCREENS.likedPhoto}
+            component={LikedPhotoScreen}
+            options={{
+              title: 'Liked photos',
+              tabBarItemStyle: {display: 'none'},
+            }}
+          />
         </Tab.Navigator>
       </View>
-      {/* <UserMenu /> */}
     </SafeAreaView>
   );
 };

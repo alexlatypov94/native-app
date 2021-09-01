@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   ScrollView,
@@ -24,30 +24,27 @@ type Props = NativeStackScreenProps<
 >;
 
 export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
-  const {photoId} = route.params;
   const {colors} = useContext(ThemeContext);
-  const photoData = useSelector((store: IAppState) =>
-    store.photosReducer.photoData.find(el => el?.id === photoId),
-  );
-
-  const storage = useSelector(
-    (state: IAppState) => state.likedPhotoReducer.likedPhotoData,
-  );
-  const isLiked = storage?.find((el: IApiData) => el?.id === photoId);
-
-  const [isTouchable, setIsTouchable] = useState(false);
+  const bgColor = {backgroundColor: colors.background};
+  const textColor = {color: colors.text};
+  const {photoData} = route.params;
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;
   const twitterUrl = `https://twitter.com/${photoData?.user.social.twitter_username}`;
   const portfolioUrl = photoData?.user.social.portfolio_url as string;
 
-  const bgColor = {backgroundColor: colors.background};
-  const textColor = {color: colors.text};
-
   const imgSource = {
     uri: photoData?.urls.regular,
     height: Dimensions.get('window').height / 2,
   };
+
+  const storage = useSelector(
+    (store: IAppState) => store.likedPhotoReducer.likedPhotoData,
+  );
+
+  const isLiked = storage.find(el => photoData.id === el.id);
+
+  const [isTouchable, setIsTouchable] = useState(isLiked?.liked_by_user);
 
   const dispatch = useDispatch();
 
@@ -55,6 +52,10 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
     setIsTouchable(!isTouchable);
     dispatch(addLikedPhoto(photoData as IApiData, !isTouchable));
   };
+
+  useEffect(() => {
+    setIsTouchable(photoData?.liked_by_user);
+  }, [photoData?.liked_by_user, photoData]);
 
   return (
     <ScrollView style={[styles.container, bgColor]}>
@@ -71,7 +72,7 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
         </View>
         <View style={styles.iconsWrapper}>
           <TouchableOpacity onPress={handleTouch}>
-            {isLiked?.liked_by_user ? (
+            {isTouchable ? (
               <MaterialCommunityIcons name="heart" color="#e63b3b" size={44} />
             ) : (
               <MaterialCommunityIcons

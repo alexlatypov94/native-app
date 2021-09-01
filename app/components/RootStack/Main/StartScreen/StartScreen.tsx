@@ -1,20 +1,25 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {useContext} from 'react';
-import {Dimensions} from 'react-native';
-import {StyleSheet} from 'react-native';
-import {Text, View} from 'react-native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import React, {useContext} from 'react';
+import {
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {SCREENS} from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {UserDrawerParamsList} from '../../../interface';
 
 export const StartScreen: React.FC = () => {
   const navigation =
-    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.photos>>();
+    useNavigation<
+      NavigationProp<UserDrawerParamsList, SCREENS.dispatcherScreen>
+    >();
 
   const handleNavigation = () => {
-    navigation.navigate(SCREENS.photos);
+    console.log(1);
+    navigation.navigate(SCREENS.dispatcherScreen);
   };
 
   const {colors} = useContext(ThemeContext);

@@ -115,8 +115,12 @@ export type UserDrawerParamsList = {
   [SCREENS.start]: undefined;
   [SCREENS.photos]: undefined;
   [SCREENS.settings]: undefined;
-  [SCREENS.selectedPhoto]: {photoId: string};
+  [SCREENS.selectedPhoto]: {photoData: IApiData};
+  [SCREENS.likedPhoto]: undefined;
   [SCREENS.profile]: undefined;
+  [SCREENS.newPhotos]: undefined;
+  [SCREENS.topPhotos]: undefined;
+  [SCREENS.dispatcherScreen]: undefined;
   [SCREENS.auth]: undefined;
   [SCREENS.signup]: undefined;
 };

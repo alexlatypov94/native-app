@@ -1,9 +1,9 @@
 import {applyMiddleware, createStore} from 'redux';
 import rootReducer from './reducer/rootReducer';
 import createSagaMiddleware from '@redux-saga/core';
-import {watcher} from './saga';
 import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {globalWatcher} from './saga/sagaFork';
 
 const saga = createSagaMiddleware();
 
@@ -15,10 +15,10 @@ const persistConfig = {
   whitelist: ['likedPhotoReducer', 'authReducer'],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer<any, any>(persistConfig, rootReducer);
 
 export const store = createStore(persistedReducer, applyMiddleware(saga));
 
-saga.run(watcher);
+saga.run(globalWatcher);
 
 export const persistor = persistStore(store);
