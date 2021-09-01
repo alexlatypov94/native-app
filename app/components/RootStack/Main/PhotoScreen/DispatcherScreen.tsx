@@ -33,8 +33,8 @@ export const DispatcherScreen: React.FC = () => {
     headerTitleAlign: 'center',
     headerTitleStyle: {color: textColor},
     headerTitle: 'My Studio',
-    headerRight: headerRight,
     drawerStyle: {...bgColor},
+    drawerLabelStyle: {color: textColor},
     unmountOnBlur: true,
   };
 
@@ -44,11 +44,16 @@ export const DispatcherScreen: React.FC = () => {
 
       <Drawer.Navigator
         initialRouteName={SCREENS.photos}
-        screenOptions={screenOptions}>
+        screenOptions={screenOptions}
+        backBehavior={'history'}>
         <Drawer.Screen
           name={SCREENS.photos}
           component={PhotoScreen}
-          options={{drawerLabel: 'Random Photo', headerTitle: 'Random Photo'}}
+          options={{
+            drawerLabel: 'Random Photo',
+            headerTitle: 'Random Photo',
+            headerRight: headerRight,
+          }}
         />
         <Drawer.Screen
           name={SCREENS.topPhotos}

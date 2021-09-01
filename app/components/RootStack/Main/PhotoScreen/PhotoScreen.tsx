@@ -17,6 +17,7 @@ import {
 import {ThemeContext} from '../../../context/ThemeContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  addSearchValue,
   onClearPhotoData,
   startRequest,
 } from '../../../../store/action/photosAction';
@@ -36,7 +37,7 @@ type Props = NativeStackScreenProps<
 
 export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
-  const {photoData, isError, isLoading} = useSelector(
+  const {photoData, isError, isLoading, searchValue} = useSelector(
     (state: IAppState) => state.photosReducer,
   );
 
@@ -59,7 +60,8 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   const bgColor = {backgroundColor: colors.background};
 
   const getPhotos = useCallback(
-    (value: string, numPage: number) => dispatch(startRequest(value, numPage)),
+    (value: string, numPage: number, searchedValue: string = '') =>
+      dispatch(startRequest(value, numPage, searchedValue)),
     [dispatch],
   );
 
@@ -92,8 +94,14 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   }, [dispatch, route.name]);
 
   useEffect(() => {
-    getPhotos(route.name, page);
-  }, [getPhotos, page, route.name]);
+    getPhotos(route.name, page, searchValue);
+  }, [searchValue, getPhotos, page, route.name]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(addSearchValue());
+    };
+  }, [dispatch]);
 
   const renderItem = ({item, i}: {item: IApiData; i: number}) => {
     const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;

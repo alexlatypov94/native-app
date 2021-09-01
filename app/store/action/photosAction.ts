@@ -2,10 +2,14 @@ import {PhotosActionTypes} from './../reducer/photosReducer/types';
 
 // RANDOM PHOTO
 
-export function startRequest(value: string, page: number) {
+export function startRequest(
+  value: string,
+  page: number,
+  searchValue: string = '',
+) {
   return {
     type: PhotosActionTypes.GET_REQUEST_PHOTO,
-    payload: {value, page},
+    payload: {value, page, searchValue},
   };
 }
 
@@ -80,5 +84,14 @@ export function getLatestRequestFailure() {
 export function onClearPhotoData() {
   return {
     type: PhotosActionTypes.ON_CLEAR_PHOTO_DATA,
+  };
+}
+
+// ADD SEARCH VALUE
+
+export function addSearchValue(searchValue: string = '') {
+  return {
+    type: PhotosActionTypes.ADD_SEARCH_VALUE,
+    payload: {searchValue},
   };
 }
