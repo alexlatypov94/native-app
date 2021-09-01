@@ -1,11 +1,12 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import React, {useContext} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
   TouchableWithoutFeedback,
   StyleSheet,
   Dimensions,
+  Animated,
 } from 'react-native';
 import {SCREENS} from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
@@ -17,6 +18,34 @@ export const StartScreen: React.FC = () => {
       NavigationProp<UserDrawerParamsList, SCREENS.dispatcherScreen>
     >();
 
+  const [startValueScale] = useState(new Animated.Value(0));
+  const [startValueOpacity] = useState(new Animated.Value(1));
+
+  const endValueScale = 6;
+
+  const runAnimation = useCallback(() => {
+    Animated.parallel([
+      Animated.loop(
+        Animated.timing(startValueScale, {
+          toValue: endValueScale,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ),
+      Animated.loop(
+        Animated.timing(startValueOpacity, {
+          toValue: 0,
+          duration: 3000,
+          useNativeDriver: true,
+        }),
+      ),
+    ]).start();
+  }, [startValueScale, startValueOpacity]);
+
+  useEffect(() => {
+    runAnimation();
+  }, [runAnimation]);
+
   const handleNavigation = () => {
     navigation.navigate(SCREENS.dispatcherScreen);
   };
@@ -25,13 +54,21 @@ export const StartScreen: React.FC = () => {
 
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
+  const animateStyle = {
+    transform: [
+      {
+        scale: startValueScale,
+      },
+    ],
+    opacity: startValueOpacity,
+  };
 
   return (
     <View style={[styles.startWrapper, bgColor]}>
       <TouchableWithoutFeedback onPress={handleNavigation}>
         <View style={styles.buttonStyle}>
           <Text style={[styles.buttonTextStyle, textColor]}>Welcome</Text>
-          <View style={[styles.roundWave]} />
+          <Animated.View style={[styles.roundWave, animateStyle]} />
         </View>
       </TouchableWithoutFeedback>
     </View>
