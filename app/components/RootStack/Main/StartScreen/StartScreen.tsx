@@ -8,7 +8,11 @@ import {
   Dimensions,
   Animated,
 } from 'react-native';
-import {SCREENS} from '../../../constants/constants';
+import {
+  ANIMATION_DURATION,
+  ANIMATION_SCALE_END_VALUE,
+  SCREENS,
+} from '../../../constants/constants';
 import {ThemeContext} from '../../../context/ThemeContext';
 import {UserDrawerParamsList} from '../../../interface';
 
@@ -21,21 +25,19 @@ export const StartScreen: React.FC = () => {
   const [startValueScale] = useState(new Animated.Value(0));
   const [startValueOpacity] = useState(new Animated.Value(1));
 
-  const endValueScale = 6;
-
   const runAnimation = useCallback(() => {
     Animated.parallel([
       Animated.loop(
         Animated.timing(startValueScale, {
-          toValue: endValueScale,
-          duration: 3000,
+          toValue: ANIMATION_SCALE_END_VALUE,
+          duration: ANIMATION_DURATION,
           useNativeDriver: true,
         }),
       ),
       Animated.loop(
         Animated.timing(startValueOpacity, {
           toValue: 0,
-          duration: 3000,
+          duration: ANIMATION_DURATION,
           useNativeDriver: true,
         }),
       ),

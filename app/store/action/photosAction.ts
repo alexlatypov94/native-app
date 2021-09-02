@@ -1,3 +1,4 @@
+import {IApiData} from './../../components/interface/index';
 import {PhotosActionTypes} from './../reducer/photosReducer/types';
 
 // RANDOM PHOTO
@@ -13,9 +14,10 @@ export function startRequest(
   };
 }
 
-export function successRequest() {
+export function successRequest(photoData: Array<IApiData>) {
   return {
     type: PhotosActionTypes.GET_REQUEST_SUCCESS,
+    payload: {photoData},
   };
 }
 
@@ -32,14 +34,15 @@ export function refreshRequest() {
     type: PhotosActionTypes.GET_REFRESH_REQUEST,
   };
 }
-export function refreshRequestSuccess() {
+export function refreshRequestSuccess(photoData: Array<IApiData>) {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_REFRESH_REQUEST_SUCCESS,
+    payload: {photoData},
   };
 }
 export function refreshRequestFailure() {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_REFRESH_REQUEST_FAILURE,
   };
 }
 
@@ -47,17 +50,18 @@ export function refreshRequestFailure() {
 
 export function getTopPhotoRequest() {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_TOP_PHOTO_REQUEST,
   };
 }
-export function getTopPhotoRequestSuccess() {
+export function getTopPhotoRequestSuccess(photoData: Array<IApiData>) {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_TOP_PHOTO_REQUEST_SUCCESS,
+    payload: {photoData},
   };
 }
 export function getTopPhotoRequestFailure() {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_TOP_PHOTO_REQUEST_FAILURE,
   };
 }
 
@@ -65,17 +69,18 @@ export function getTopPhotoRequestFailure() {
 
 export function getLatestPhotoRequest() {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_LATEST_PHOTO_REQUEST,
   };
 }
-export function getLatestRequestSuccess() {
+export function getLatestRequestSuccess(photoData: Array<IApiData>) {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_LATEST_REQUEST_SUCCESS,
+    payload: {photoData},
   };
 }
 export function getLatestRequestFailure() {
   return {
-    type: PhotosActionTypes.GET_REFRESH_REQUEST,
+    type: PhotosActionTypes.GET_LATEST_REQUEST_FAILURE,
   };
 }
 

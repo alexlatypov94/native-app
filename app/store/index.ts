@@ -12,7 +12,7 @@ type RootState = ReturnType<typeof rootReducer>;
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['likedPhotoReducer', 'authReducer'],
+  whitelist: ['photoData', 'authReducer'],
 };
 
 const persistedReducer = persistReducer<any, any>(persistConfig, rootReducer);

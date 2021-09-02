@@ -3,7 +3,7 @@ import {
   createDrawerNavigator,
   DrawerNavigationOptions,
 } from '@react-navigation/drawer';
-import {SCREENS} from '../../../constants/constants';
+import {COLORS, HEADER_TITLES, SCREENS} from '../../../constants/constants';
 import {PhotoScreen} from './PhotoScreen';
 import {ModalWindow} from '../../ModalWindow/ModalWindow';
 import {Filter} from '../../Filter/Filter';
@@ -21,21 +21,36 @@ export const DispatcherScreen: React.FC = () => {
 
   const bgColor = {backgroundColor: colors.background};
   const tintColor = colors.tintColor;
-  const textColor = colors.text;
+  const textColor = {color: colors.text};
   const headerRight = () => <Filter onVisibleModal={handleModalVisible} />;
   const screenOptions: DrawerNavigationOptions = {
     headerTintColor: tintColor,
     headerStyle: {
       ...bgColor,
       borderBottomWidth: 1,
-      borderBottomColor: '#fff',
+      borderBottomColor: COLORS.white,
     },
     headerTitleAlign: 'center',
-    headerTitleStyle: {color: textColor},
-    headerTitle: 'My Studio',
-    drawerStyle: {...bgColor},
-    drawerLabelStyle: {color: textColor},
+    headerTitleStyle: textColor,
+    drawerStyle: bgColor,
+    drawerLabelStyle: textColor,
     unmountOnBlur: true,
+  };
+
+  const DrawerScreensOptions = {
+    photos: {
+      drawerLabel: HEADER_TITLES.randomPhotos,
+      headerTitle: HEADER_TITLES.randomPhotos,
+      headerRight: headerRight,
+    },
+    topPhotos: {
+      drawerLabel: HEADER_TITLES.topPhotos,
+      headerTitle: HEADER_TITLES.topPhotos,
+    },
+    newPhotos: {
+      drawerLabel: HEADER_TITLES.newPhotos,
+      headerTitle: HEADER_TITLES.newPhotos,
+    },
   };
 
   return (
@@ -49,21 +64,17 @@ export const DispatcherScreen: React.FC = () => {
         <Drawer.Screen
           name={SCREENS.photos}
           component={PhotoScreen}
-          options={{
-            drawerLabel: 'Random Photo',
-            headerTitle: 'Random Photo',
-            headerRight: headerRight,
-          }}
+          options={DrawerScreensOptions.photos}
         />
         <Drawer.Screen
           name={SCREENS.topPhotos}
           component={PhotoScreen}
-          options={{drawerLabel: 'Top Photo', headerTitle: 'Top Photo'}}
+          options={DrawerScreensOptions.topPhotos}
         />
         <Drawer.Screen
           name={SCREENS.newPhotos}
           component={PhotoScreen}
-          options={{drawerLabel: 'New Photo', headerTitle: 'New Photo'}}
+          options={DrawerScreensOptions.newPhotos}
         />
       </Drawer.Navigator>
     </>

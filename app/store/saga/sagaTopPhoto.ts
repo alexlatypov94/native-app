@@ -22,12 +22,7 @@ function* workerTopPhoto(action: IPhotosAction) {
       action.payload.value,
       action.payload.page,
     );
-    yield put({
-      type: PhotosActionTypes.GET_TOP_PHOTO_REQUEST_SUCCESS,
-      payload: {photoData: photos},
-    });
-
-    yield put(getTopPhotoRequestSuccess());
+    yield put(getTopPhotoRequestSuccess(photos));
   } catch (error) {
     console.log(error);
     yield put(getTopPhotoRequestFailure());

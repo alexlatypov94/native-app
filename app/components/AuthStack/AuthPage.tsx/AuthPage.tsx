@@ -14,7 +14,8 @@ import {useInput} from '../../hooks';
 import {UserDrawerParamsList} from '../../interface';
 import {emailValidator, signIn} from '../../utils/index';
 import {useDispatch} from 'react-redux';
-import {setAuth, setAuthWithoutReg} from '../../../store/action/authAction';
+import {startAuth, setAuthWithoutReg} from '../../../store/action/authAction';
+import auth from '@react-native-firebase/auth';
 
 export const AuthPage: React.FC = () => {
   const navigator =
@@ -27,7 +28,12 @@ export const AuthPage: React.FC = () => {
 
   const dispatch = useDispatch();
   const handleAuthWithoutReg = () => dispatch(setAuthWithoutReg());
-  const handleAuth = () => dispatch(setAuth(true));
+  const handleAuth = () => {
+    auth().onAuthStateChanged(user => {
+      console.log(user?.email);
+      dispatch(startAuth(user?.uid as string));
+    });
+  };
 
   const handlePress = () => {
     const checkEmail = emailValidator(email.value);

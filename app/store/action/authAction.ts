@@ -1,14 +1,22 @@
 import {AuthActionTypes, IUserDataValue} from './../reducer/authReducer/types';
 
-export function setAuth(
-  value: boolean,
-  id: string = '',
-  name: string = '',
-  surname: string = '',
-) {
+export function startAuth(id: string) {
   return {
     type: AuthActionTypes.AUTHORIZATION,
-    payload: {isAuth: value, id: id, name: name, surname},
+    payload: {id},
+  };
+}
+
+export function authSuccess(name: string, surname: string) {
+  return {
+    type: AuthActionTypes.AUTHORIZATION_SUCCESS,
+    payload: {name, surname},
+  };
+}
+
+export function authFailure() {
+  return {
+    type: AuthActionTypes.AUTHORIZATION_FAILURE,
   };
 }
 

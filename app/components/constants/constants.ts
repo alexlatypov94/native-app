@@ -58,3 +58,38 @@ export const DEFAULT_USER = {
 export const COLOR_ACTIVITY_INDICATOR = '#00ff00';
 
 export const UNDERLAY_COLOR_AUTH = '#94bfd8';
+
+export const ANIMATION_DURATION = 3000;
+export const ANIMATION_SCALE_END_VALUE = 6;
+
+export const HEADER_TITLES = {
+  myProfile: 'My Profile',
+  likedPhotos: 'Liked Photos',
+  randomPhotos: 'Random Photos',
+  topPhotos: 'Top Photos',
+  newPhotos: 'New Photos',
+};
+
+export const COLORS = {
+  white: '#fff',
+  black: '000',
+  redLike: '#e63b3b',
+};
+
+export const MATERIAL_ICON_SIZES = {
+  medium: 30,
+  large: 44,
+};
+
+export const ICONS_NAME = {
+  filter: 'filter-outline',
+  heart: 'heart',
+  heart_outline: 'heart-outline',
+  instagram: 'instagram',
+  twitter: 'twitter',
+  briefcase: 'briefcase',
+  home: 'home-outline',
+  image: 'image-outline',
+  account: 'account',
+  settings: 'cog-outline',
+};
