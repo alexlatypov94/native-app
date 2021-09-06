@@ -1,20 +1,14 @@
 import {useNetInfo} from '@react-native-community/netinfo';
 import MasonryList from '@react-native-seoul/masonry-list';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect} from 'react';
-import {
-  View,
-  TouchableHighlight,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+
+import {ThemeContext} from '../context/ThemeContext';
+import {IApiData} from '../interfaces/interfaces';
+import {PhotoCard} from '../shared/PhotoCard';
 import {getPhotoFromDBRequestStart} from '../store/action/likedPhotoActions';
 import {IAppState} from '../store/types';
-import {COLORS, PHOTO_HEIGHT, SCREENS} from '../constants/constants';
-import {ThemeContext} from '../context/ThemeContext';
-import {IApiData, UserDrawerParamsList} from '../interfaces/interfaces';
 
 export const LikedPhotoScreen: React.FC = () => {
   const {likedPhotoData} = useSelector(
@@ -22,8 +16,6 @@ export const LikedPhotoScreen: React.FC = () => {
   );
   const {id} = useSelector((store: IAppState) => store.authReducer);
   const {isConnected} = useNetInfo();
-  const navigation =
-    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
 
   const {colors} = useContext(ThemeContext);
   const dispatch = useDispatch();
@@ -35,29 +27,9 @@ export const LikedPhotoScreen: React.FC = () => {
     }
   }, [dispatch, id, isConnected]);
 
-  const renderItem = ({item, i}: {item: IApiData; i: number}) => {
-    const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
-    const moveToPhotoPage = () => {
-      navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
-    };
-
-    return (
-      <View style={styles.imgWrapperStyle} key={item.id + i}>
-        <TouchableHighlight
-          onPress={moveToPhotoPage}
-          underlayColor={COLORS.white}
-          style={styles.touchableBorder}>
-          <Image
-            style={styles.imgStyle}
-            source={{
-              uri: item?.urls?.regular,
-              height: heightImg,
-            }}
-          />
-        </TouchableHighlight>
-      </View>
-    );
-  };
+  const renderItem = ({item, i}: {item: IApiData; i: number}) => (
+    <PhotoCard item={item} index={i} key={item.id + i} />
+  );
 
   return (
     <View style={[styles.masonry, bgColor]}>
