@@ -12,14 +12,17 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
 import {ThemeContext} from '../../../context/ThemeContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {SCREENS} from '../../../constants/constants';
+import {
+  COLORS,
+  ICONS_NAME,
+  MATERIAL_ICON_SIZES,
+  SCREENS,
+} from '../../../constants/constants';
 import {IApiData, UserDrawerParamsList} from '../../../interface';
 import {IAppState} from '../../../../store/types';
 import {LinkComponent} from '../../../LinkComponent/LinkComponent';
 import {addLikedPhoto} from '../../../../store/action/likedPhotoActions';
 import {addPhotoToDataBase, removePhotoFromDatabase} from '../../../utils';
-import {useNetInfo} from '@react-native-community/netinfo';
-import {getPhotoFromDatabase} from '../../../utils/getPhotoFromDatabase';
 
 type Props = NativeStackScreenProps<
   UserDrawerParamsList,
@@ -27,13 +30,10 @@ type Props = NativeStackScreenProps<
 >;
 
 export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
-  const [photoDB, setPhotoDB] = useState([]);
   const {colors} = useContext(ThemeContext);
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
   const {photoData} = route.params;
-
-  const {isConnected} = useNetInfo();
 
   const instagramUrl = `https://www.instagram.com/${photoData?.user.social.instagram_username}`;
   const twitterUrl = `https://twitter.com/${photoData?.user.social.twitter_username}`;
@@ -50,9 +50,9 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
     (store: IAppState) => store.likedPhotoReducer.likedPhotoData,
   );
 
-  const isLiked = isConnected
-    ? photoDB?.find((el: IApiData) => photoData.id === el.id)
-    : storage.find((el: IApiData) => photoData.id === el.id);
+  console.log(storage);
+
+  const isLiked = storage.find((el: IApiData) => photoData.id === el.id);
 
   const [isTouchable, setIsTouchable] = useState(isLiked?.liked_by_user);
 
@@ -67,14 +67,11 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
   };
 
   const handleTouch = () => {
+    console.log(isTouchable);
     setIsTouchable(!isTouchable);
     addOrRemovePhotoInDB(!isTouchable);
     dispatch(addLikedPhoto(photoData as IApiData, !isTouchable));
   };
-
-  useEffect(() => {
-    getPhotoFromDatabase(id).then(res => setPhotoDB(res?.photoData));
-  }, [id, isTouchable]);
 
   useEffect(() => {
     setIsTouchable(!!isLiked?.liked_by_user);
@@ -96,12 +93,16 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
         <View style={styles.iconsWrapper}>
           <TouchableOpacity onPress={handleTouch}>
             {isTouchable ? (
-              <MaterialCommunityIcons name="heart" color="#e63b3b" size={44} />
+              <MaterialCommunityIcons
+                name={ICONS_NAME.heart}
+                color={COLORS.redLike}
+                size={MATERIAL_ICON_SIZES.large}
+              />
             ) : (
               <MaterialCommunityIcons
-                name="heart-outline"
-                color="#fff"
-                size={44}
+                name={ICONS_NAME.heart_outline}
+                color={COLORS.white}
+                size={MATERIAL_ICON_SIZES.large}
               />
             )}
           </TouchableOpacity>
@@ -111,9 +112,9 @@ export const SelectedPhoto: React.FC<Props> = React.memo(({route}: Props) => {
         </View>
       </View>
       <View style={styles.authorSocial}>
-        <LinkComponent url={instagramUrl} icon="instagram" />
-        <LinkComponent url={twitterUrl} icon="twitter" />
-        <LinkComponent url={portfolioUrl} icon="briefcase" />
+        <LinkComponent url={instagramUrl} icon={ICONS_NAME.instagram} />
+        <LinkComponent url={twitterUrl} icon={ICONS_NAME.twitter} />
+        <LinkComponent url={portfolioUrl} icon={ICONS_NAME.briefcase} />
       </View>
     </ScrollView>
   );

@@ -24,12 +24,7 @@ function* workerLatestPhoto(action: IPhotosAction) {
       action.payload.value,
       action.payload.page,
     );
-    yield put({
-      type: PhotosActionTypes.GET_LATEST_REQUEST_SUCCESS,
-      payload: {photoData: photos},
-    });
-
-    yield put(getLatestRequestSuccess());
+    yield put(getLatestRequestSuccess(photos));
   } catch (error) {
     console.log(error);
     yield put(getLatestRequestFailure());

@@ -11,17 +11,20 @@ const initialState: IAuthState = {
 const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
   switch (action.type) {
     case AuthActionTypes.AUTHORIZATION:
+      return {...state, id: action.payload.id};
+    case AuthActionTypes.AUTHORIZATION_SUCCESS:
       return {
         ...state,
-        isAuth: action.payload.isAuth,
-        id: action.payload.id,
+        isAuth: true,
         name: action.payload.name,
         surname: action.payload.surname,
       };
+    case AuthActionTypes.AUTHORIZATION_FAILURE:
+      return {...state, isAuth: false};
     case AuthActionTypes.AUTH_WITHOUT_REG:
-      return {...state, isAut: true, isAuthWithoutReg: true};
+      return {...state, isAuth: true, isAuthWithoutReg: true};
     case AuthActionTypes.SIGN_OUT_PROFILE:
-      return {...state, isAut: false, isAuthWithoutReg: false};
+      return {...state, isAuth: false, isAuthWithoutReg: false};
     case AuthActionTypes.REGISTRATION:
       return {
         ...state,

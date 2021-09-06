@@ -1,6 +1,12 @@
 import React, {useContext} from 'react';
 import {StyleSheet, View, SafeAreaView} from 'react-native';
-import {SCREENS} from '../constants/constants';
+import {
+  COLORS,
+  HEADER_TITLES,
+  ICONS_NAME,
+  MATERIAL_ICON_SIZES,
+  SCREENS,
+} from '../constants/constants';
 import {ThemeContext} from '../context/ThemeContext';
 import {ProfileScreen} from './Main/ProfileScreen/ProfileScreen';
 import {SettingsScreen} from './Main/SettingsScreen/SettingsScreen';
@@ -24,29 +30,58 @@ export const RootStack: React.FC = () => {
   const textColor = {color: colors.text};
 
   const homeIcon = () => (
-    <MaterialCommunityIcons name="home-outline" size={30} color="#fff" />
+    <MaterialCommunityIcons
+      name={ICONS_NAME.home}
+      size={MATERIAL_ICON_SIZES.medium}
+      color={COLORS.white}
+    />
   );
   const galeryIcon = () => (
-    <MaterialCommunityIcons name="image-outline" size={30} color="#fff" />
+    <MaterialCommunityIcons
+      name={ICONS_NAME.image}
+      size={MATERIAL_ICON_SIZES.medium}
+      color={COLORS.white}
+    />
   );
   const profileIcon = () => (
-    <MaterialCommunityIcons name="account" size={30} color="#fff" />
+    <MaterialCommunityIcons
+      name={ICONS_NAME.account}
+      size={MATERIAL_ICON_SIZES.medium}
+      color={COLORS.white}
+    />
   );
   const settingsIcon = () => (
-    <MaterialCommunityIcons name="cog-outline" size={30} color="#fff" />
+    <MaterialCommunityIcons
+      name={ICONS_NAME.settings}
+      size={MATERIAL_ICON_SIZES.medium}
+      color={COLORS.white}
+    />
   );
 
   const screenOptions: BottomTabNavigationOptions = {
     headerTintColor: tintColor,
-    tabBarStyle: {...bgColor},
+    tabBarStyle: bgColor,
     tabBarShowLabel: false,
     headerStyle: {
       ...bgColor,
       borderBottomWidth: 1,
-      borderBottomColor: '#fff',
+      borderBottomColor: COLORS.white,
     },
     headerTitleAlign: 'center',
     headerTitleStyle: textColor,
+  };
+
+  const StackScreensOptions = {
+    start: {tabBarIcon: homeIcon},
+    dispatcher: {headerShown: false, tabBarIcon: galeryIcon},
+    profile: {title: HEADER_TITLES.myProfile, tabBarIcon: profileIcon},
+    settings: {tabBarIcon: settingsIcon},
+    selectedPhoto: {headerShown: false, tabBarItemStyle: {display: 'none'}},
+    likedPhoto: {
+      title: HEADER_TITLES.likedPhotos,
+      tabBarItemStyle: {display: 'none'},
+      unmountOnBlur: true,
+    },
   };
 
   return (
@@ -59,39 +94,36 @@ export const RootStack: React.FC = () => {
           <Tab.Screen
             name={SCREENS.start}
             component={StartScreen}
-            options={{tabBarIcon: homeIcon}}
+            options={StackScreensOptions.start}
           />
           <Tab.Screen
             name={SCREENS.dispatcherScreen}
             component={DispatcherScreen}
-            options={{
-              headerShown: false,
-              tabBarIcon: galeryIcon,
-            }}
+            options={StackScreensOptions.dispatcher}
           />
           <Tab.Screen
             name={SCREENS.profile}
             component={ProfileScreen}
-            options={{title: 'My Profile', tabBarIcon: profileIcon}}
+            options={StackScreensOptions.profile}
           />
           <Tab.Screen
             name={SCREENS.settings}
             component={SettingsScreen}
-            options={{tabBarIcon: settingsIcon}}
+            options={StackScreensOptions.settings}
           />
           <Tab.Screen
             name={SCREENS.selectedPhoto}
             component={SelectedPhoto}
-            options={{headerShown: false, tabBarItemStyle: {display: 'none'}}}
+            options={
+              StackScreensOptions.selectedPhoto as BottomTabNavigationOptions
+            }
           />
           <Tab.Screen
             name={SCREENS.likedPhoto}
             component={LikedPhotoScreen}
-            options={{
-              title: 'Liked photos',
-              tabBarItemStyle: {display: 'none'},
-              unmountOnBlur: true,
-            }}
+            options={
+              StackScreensOptions.likedPhoto as BottomTabNavigationOptions
+            }
           />
         </Tab.Navigator>
       </View>
@@ -104,6 +136,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   main: {
-    flex: 15,
+    flex: 1,
   },
 });

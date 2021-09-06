@@ -1,3 +1,4 @@
+import {IApiData} from './../../components/interface/index';
 import {PhotosActionTypes, IPhotosAction} from '../reducer/photosReducer/types';
 import {getPhotos} from '../../components/utils/getPhotos';
 import {call, put, takeEvery} from 'redux-saga/effects';
@@ -9,17 +10,13 @@ export function* watcher() {
 
 function* photoWorker(action: IPhotosAction) {
   try {
-    const photos: IPhotosAction = yield call(
+    const photos: IApiData[] = yield call(
       getPhotos,
       action.payload.value,
       action.payload.page,
       action.payload.searchValue,
     );
-    yield put({
-      type: PhotosActionTypes.GET_REQUEST_SUCCESS,
-      payload: {photoData: photos},
-    });
-    yield put(successRequest());
+    yield put(successRequest(photos));
   } catch (error) {
     console.log(error);
     yield put(errorRequest());

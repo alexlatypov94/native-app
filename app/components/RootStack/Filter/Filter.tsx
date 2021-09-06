@@ -3,6 +3,7 @@ import {useContext} from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
 import {ThemeContext} from '../../context/ThemeContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {MATERIAL_ICON_SIZES} from '../../constants/constants';
 interface IFilterProp {
   onVisibleModal: () => void;
 }
@@ -17,7 +18,7 @@ export const Filter: React.FC<IFilterProp> = React.memo(
           <View style={styles.filter}>
             <MaterialCommunityIcons
               name="filter-outline"
-              size={30}
+              size={MATERIAL_ICON_SIZES.medium}
               color={color}
             />
           </View>

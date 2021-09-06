@@ -15,15 +15,31 @@ const likedPhotoReducer = (
 ) => {
   switch (action.type) {
     case LikedPhotoActionTypes.SET_LIKED_PHOTO:
+      console.log(action.payload);
       return {
         ...state,
-        likedPhotoData: helper(state?.likedPhotoData, action?.payload).filter(
-          el => {
-            if (el && el.liked_by_user === true) {
-              return el;
+        likedPhotoData: helper(
+          state?.likedPhotoData,
+          action?.payload.likedPhotoData,
+        ).filter(el => {
+          if (el && el.liked_by_user === true) {
+            console.log(el);
+            return el;
+          }
+        }),
+      };
+    case LikedPhotoActionTypes.GET_REQUEST_PHOTO_DB_SUCCESS:
+      return {
+        ...state,
+        likedPhotoData: state.likedPhotoData
+          .concat(action.payload.likedPhotoData)
+          .reduce((acc: Array<IApiData>, curr: IApiData) => {
+            const founded = acc.find((el: IApiData) => el.id === curr.id);
+            if (founded) {
+              return acc;
             }
-          },
-        ),
+            return [...acc, curr];
+          }, []),
       };
     default:
       return state;

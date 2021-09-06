@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {IApiData, UserDrawerParamsList} from '../../../interface';
 import {
+  COLORS,
   COLOR_ACTIVITY_INDICATOR,
   PHOTO_HEIGHT,
   SCREENS,
@@ -26,17 +27,12 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-const wait = (timeout: number) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
-
 type Props = NativeStackScreenProps<
   UserDrawerParamsList,
   SCREENS.photos | SCREENS.topPhotos | SCREENS.newPhotos
 >;
 
 export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
-  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const {photoData, isError, isLoading, searchValue} = useSelector(
     (state: IAppState) => state.photosReducer,
   );
@@ -66,17 +62,9 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   );
 
   const onRefresh = () => {
-    setIsRefreshing(true);
     dispatch(onClearPhotoData());
     setPage(1);
     getPhotos(route.name, page);
-    wait(2000).then(() => {
-      setIsRefreshing(false);
-    });
-  };
-
-  const moveToPhotoPage = (item: IApiData) => {
-    navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
   };
 
   const onEndReached = () => {
@@ -106,11 +94,15 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   const renderItem = ({item, i}: {item: IApiData; i: number}) => {
     const heightImg = i % 2 !== 0 ? PHOTO_HEIGHT.large : PHOTO_HEIGHT.small;
 
+    const moveToPhotoPage = () => {
+      navigation.navigate(SCREENS.selectedPhoto, {photoData: item});
+    };
+
     return (
       <View style={styles.imgWrapperStyle} key={item.id + i}>
         <TouchableHighlight
-          onPress={() => moveToPhotoPage(item)}
-          underlayColor="#fff"
+          onPress={moveToPhotoPage}
+          underlayColor={COLORS.white}
           style={styles.touchableBorder}>
           <Image
             style={styles.imgStyle}
@@ -125,14 +117,14 @@ export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   };
 
   const renderView = (
-    <View style={[styles.masonry, {...bgColor}]}>
+    <View style={[styles.masonry, bgColor]}>
       <MasonryList
-        contentContainerStyle={{...bgColor}}
+        contentContainerStyle={bgColor}
         data={photoData}
         numColumns={2}
         renderItem={renderItem}
         onEndReached={onEndReached}
-        refreshing={isRefreshing}
+        refreshing={isLoading}
         onRefresh={onRefresh}
         onMomentumScrollBegin={onMomentumScrollBegin}
       />

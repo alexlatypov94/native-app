@@ -21,12 +21,7 @@ function* workerRefresh(action: IPhotosAction) {
       action.payload.value,
       action.payload.page,
     );
-    yield put({
-      type: PhotosActionTypes.GET_REFRESH_REQUEST_SUCCESS,
-      payload: {photoData: photos},
-    });
-
-    yield put(refreshRequestSuccess());
+    yield put(refreshRequestSuccess(photos));
   } catch (error) {
     console.log(error);
     yield put(refreshRequestFailure());

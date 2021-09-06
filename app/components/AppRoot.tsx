@@ -7,60 +7,31 @@
  *
  * @format
  */
-// import 'react-native-gesture-handler';
-import React, {useCallback, useEffect, useState} from 'react';
+import 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
 import {Appearance} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {DARK_COLORS, LIGHT_COLORS, ThemeContext} from './context/ThemeContext';
 import {IAppState} from '../store/types';
 import {RootStack} from './RootStack/RootStack';
 import {AuthStack} from './AuthStack/AuthStack';
-import {setAuth} from '../store/action/authAction';
-import firestore from '@react-native-firebase/firestore';
-import {IUserInfoDB} from './interface';
+import {startAuth} from '../store/action/authAction';
+import auth from '@react-native-firebase/auth';
 
 const AppRoot = () => {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
-  const [userInfo, setUserInfo] = useState<IUserInfoDB>({
-    name: '',
-    surname: '',
-  });
 
   const {isAuth} = useSelector((state: IAppState) => state.authReducer);
 
   const dispatch = useDispatch();
-  const setAuthorization = useCallback(
-    (
-      value: boolean,
-      id: string = '',
-      name: string = '',
-      surname: string = '',
-    ) => {
-      dispatch(setAuth(value, id, name, surname));
-    },
-    [dispatch],
-  );
+
   useEffect(() => {
     auth().onAuthStateChanged(user => {
-      if (user) {
-        firestore()
-          .collection('users')
-          .doc(user?.uid)
-          .get()
-          .then(res => {
-            const data = res.data();
-            setUserInfo({name: data?.name, surname: data?.surname});
-          });
-
-        setAuthorization(true, user.uid, userInfo?.name, userInfo?.surname);
-      } else {
-        setAuthorization(false);
-      }
+      dispatch(startAuth(user?.uid as string));
     });
-  }, [setAuthorization, userInfo?.name, userInfo?.surname]);
+  }, [dispatch]);
 
   const defaultTheme = {
     isDark,
