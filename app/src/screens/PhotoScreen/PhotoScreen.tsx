@@ -1,12 +1,15 @@
 import React, {useEffect} from 'react';
 import {Text, View} from 'react-native';
-import {UserDrawerParamsList} from '../interfaces/interfaces';
-import {SCREENS} from '../constants/constants';
+import {UserDrawerParamsList} from '../../interfaces/interfaces';
+import {SCREENS} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {addSearchValue, onClearPhotoData} from '../store/action/photosAction';
-import {IAppState} from '../store/types';
+import {
+  addSearchValue,
+  onClearPhotoData,
+} from '../../store/action/photosAction';
+import {IAppState} from '../../store/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {PhotoList} from '../shared/PhotoList';
+import {PhotoList} from '../../components';
 
 type Props = NativeStackScreenProps<
   UserDrawerParamsList,

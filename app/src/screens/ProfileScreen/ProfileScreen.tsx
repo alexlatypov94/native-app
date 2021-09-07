@@ -1,14 +1,14 @@
 import React, {useContext, useCallback} from 'react';
 import {StyleSheet, Text, TouchableHighlight, View} from 'react-native';
-import {UserSvg} from '../../assets/svg';
+import {UserSvg} from '../../../assets/svg';
 import {useDispatch, useSelector} from 'react-redux';
-import {signOutProfile} from '../store/action/authAction';
-import {IAppState} from '../store/types';
-import {DEFAULT_USER, SCREENS} from '../constants/constants';
-import {ThemeContext} from '../context/ThemeContext';
-import {signOut} from '../utils/signOut';
+import {signOutProfile} from '../../store/action/authAction';
+import {IAppState} from '../../store/types';
+import {DEFAULT_USER, SCREENS} from '../../constants/constants';
+import {ThemeContext} from '../../context/ThemeContext';
+import {signOut} from '../../utils/signOut';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {UserDrawerParamsList} from '../interfaces/interfaces';
+import {UserDrawerParamsList} from '../../interfaces/interfaces';
 
 export const ProfileScreen: React.FC = () => {
   const {colors} = useContext(ThemeContext);

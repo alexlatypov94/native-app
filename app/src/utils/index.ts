@@ -7,3 +7,6 @@ export * from './signOut';
 export * from './addUserToDataBase';
 export * from './addPhotoToDatabase';
 export * from './removePhotoFromDatabase';
+export * from './checkUserInDB';
+export * from './splitPhotoArray';
+export * from './getPhotoFromDatabase';

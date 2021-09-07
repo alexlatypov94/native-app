@@ -2,12 +2,12 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {onClearPhotoData, startRequest} from '../store/action/photosAction';
-import {IAppState} from '../store/types';
-import {COLOR_ACTIVITY_INDICATOR} from '../constants/constants';
-import {ThemeContext} from '../context/ThemeContext';
-import {IApiData} from '../interfaces/interfaces';
-import {PhotoCard} from './PhotoCard';
+import {onClearPhotoData, startRequest} from '../../store/action/photosAction';
+import {IAppState} from '../../store/types';
+import {COLOR_ACTIVITY_INDICATOR} from '../../constants/constants';
+import {ThemeContext} from '../../context/ThemeContext';
+import {IApiData} from '../../interfaces/interfaces';
+import {PhotoCard} from '../PhotoCard/PhotoCard';
 
 interface IPhotoListProp {
   routeName: string;

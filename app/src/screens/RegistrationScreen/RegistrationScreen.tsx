@@ -7,12 +7,12 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
-import {useInput} from '../hooks';
-import {addUserToDataBase, createUser, emailValidator} from '../utils/index';
+import {useInput} from '../../hooks';
+import {addUserToDataBase, createUser, emailValidator} from '../../utils/index';
 import {useDispatch} from 'react-redux';
-import {registration} from '../store/action/authAction';
+import {registration} from '../../store/action/authAction';
 
-export const RegistrationPage: React.FC = () => {
+export const RegistrationScreen: React.FC = () => {
   const [inValidEmail, setInvalidEmail] = useState<boolean>(false);
   const name = useInput('');
   const surname = useInput('');

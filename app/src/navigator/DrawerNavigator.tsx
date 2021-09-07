@@ -3,10 +3,9 @@ import {
   createDrawerNavigator,
   DrawerNavigationOptions,
 } from '@react-navigation/drawer';
+import {Filter, ModalWindow} from '../components';
+import {PhotoScreen} from '../screens';
 import {COLORS, HEADER_TITLES, SCREENS} from '../constants/constants';
-import {PhotoScreen} from '../screens/PhotoScreen';
-import {ModalWindow} from '../shared/ModalWindow';
-import {Filter} from '../shared/Filter';
 import {ThemeContext} from '../context/ThemeContext';
 
 const Drawer = createDrawerNavigator();

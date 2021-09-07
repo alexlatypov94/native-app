@@ -3,12 +3,12 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import React, {useContext, useEffect} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {PhotoCard} from '../../components';
 
-import {ThemeContext} from '../context/ThemeContext';
-import {IApiData} from '../interfaces/interfaces';
-import {PhotoCard} from '../shared/PhotoCard';
-import {getPhotoFromDBRequestStart} from '../store/action/likedPhotoActions';
-import {IAppState} from '../store/types';
+import {ThemeContext} from '../../context/ThemeContext';
+import {IApiData} from '../../interfaces/interfaces';
+import {getPhotoFromDBRequestStart} from '../../store/action/likedPhotoActions';
+import {IAppState} from '../../store/types';
 
 export const LikedPhotoScreen: React.FC = () => {
   const {likedPhotoData} = useSelector(

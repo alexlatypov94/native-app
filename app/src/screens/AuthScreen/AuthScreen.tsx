@@ -1,23 +1,16 @@
 import React, {useState} from 'react';
-import {
-  Button,
-  StyleSheet,
-  TouchableHighlight,
-  View,
-  Text,
-  Dimensions,
-  TextInput,
-} from 'react-native';
+import {Button, TouchableHighlight, View, Text, TextInput} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {SCREENS, UNDERLAY_COLOR_AUTH} from '../constants/constants';
-import {useInput} from '../hooks';
-import {UserDrawerParamsList} from '../interfaces/interfaces';
-import {emailValidator, signIn} from '../utils/index';
+import {SCREENS, UNDERLAY_COLOR_AUTH} from '../../constants/constants';
+import {useInput} from '../../hooks';
+import {UserDrawerParamsList} from '../../interfaces/interfaces';
+import {emailValidator, signIn} from '../../utils/index';
 import {useDispatch} from 'react-redux';
-import {startAuth, setAuthWithoutReg} from '../store/action/authAction';
+import {startAuth, setAuthWithoutReg} from '../../store/action/authAction';
 import auth from '@react-native-firebase/auth';
+import {styles} from './styles';
 
-export const AuthPage: React.FC = () => {
+export const AuthScreen: React.FC = () => {
   const navigator =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
 
@@ -91,38 +84,3 @@ export const AuthPage: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputField: {
-    fontSize: 20,
-    width: '80%',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginBottom: 15,
-  },
-  btnStyle: {
-    width: '80%',
-  },
-  touchContainer: {
-    marginVertical: 20,
-  },
-  moveRegStyle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: Dimensions.get('window').width - 100,
-    padding: 10,
-  },
-  touchRadius: {
-    borderRadius: 10,
-  },
-  invalidEmail: {
-    color: 'red',
-    fontSize: 18,
-  },
-});

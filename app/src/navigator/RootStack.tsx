@@ -8,17 +8,20 @@ import {
   SCREENS,
 } from '../constants/constants';
 import {ThemeContext} from '../context/ThemeContext';
-import {ProfileScreen} from '../screens/ProfileScreen';
-import {SettingsScreen} from '../screens/SettingsScreen';
-import {StartScreen} from '../screens/StartScreen';
-import {SelectedPhoto} from '../screens/SelectedPhoto';
+
 import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {LikedPhotoScreen} from '../screens/LikedPhotoScreen';
 import {DrawerNavigator} from './DrawerNavigator';
+import {
+  LikedPhotoScreen,
+  ProfileScreen,
+  SelectedPhotoScreen,
+  SettingsScreen,
+  StartScreen,
+} from '../screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -113,7 +116,7 @@ export const RootStack: React.FC = () => {
           />
           <Tab.Screen
             name={SCREENS.selectedPhoto}
-            component={SelectedPhoto}
+            component={SelectedPhotoScreen}
             options={
               StackScreensOptions.selectedPhoto as BottomTabNavigationOptions
             }

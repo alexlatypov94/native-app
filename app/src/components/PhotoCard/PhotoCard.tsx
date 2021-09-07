@@ -6,9 +6,9 @@ import {
   Dimensions,
   StyleSheet,
 } from 'react-native';
-import {COLORS, PHOTO_HEIGHT, SCREENS} from '../constants/constants';
+import {COLORS, PHOTO_HEIGHT, SCREENS} from '../../constants/constants';
 import {NavigationProp, useNavigation} from '@react-navigation/core';
-import {IApiData, UserDrawerParamsList} from '../interfaces/interfaces';
+import {IApiData, UserDrawerParamsList} from '../../interfaces/interfaces';
 
 interface IPhotoCardProp {
   item: IApiData;

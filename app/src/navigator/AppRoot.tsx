@@ -19,7 +19,7 @@ import {AuthStack} from './AuthStack';
 import {startAuth} from '../store/action/authAction';
 import auth from '@react-native-firebase/auth';
 
-const AppRoot = () => {
+export const AppRoot = () => {
   const colorScheme = Appearance.getColorScheme();
   const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
 
@@ -47,5 +47,3 @@ const AppRoot = () => {
     </ThemeContext.Provider>
   );
 };
-
-export default AppRoot;

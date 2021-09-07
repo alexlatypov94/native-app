@@ -10,10 +10,13 @@ import {
   Button,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import {addSearchValue, onClearPhotoData} from '../store/action/photosAction';
-import {SCREENS} from '../constants/constants';
-import {ThemeContext} from '../context/ThemeContext';
-import {UserDrawerParamsList} from '../interfaces/interfaces';
+import {
+  addSearchValue,
+  onClearPhotoData,
+} from '../../store/action/photosAction';
+import {SCREENS} from '../../constants/constants';
+import {ThemeContext} from '../../context/ThemeContext';
+import {UserDrawerParamsList} from '../../interfaces/interfaces';
 
 interface IModalProp {
   isVisible: boolean;

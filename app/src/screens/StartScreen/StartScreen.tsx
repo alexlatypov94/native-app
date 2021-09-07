@@ -12,9 +12,9 @@ import {
   ANIMATION_DURATION,
   ANIMATION_SCALE_END_VALUE,
   SCREENS,
-} from '../constants/constants';
-import {ThemeContext} from '../context/ThemeContext';
-import {UserDrawerParamsList} from '../interfaces/interfaces';
+} from '../../constants/constants';
+import {ThemeContext} from '../../context/ThemeContext';
+import {UserDrawerParamsList} from '../../interfaces/interfaces';
 
 export const StartScreen: React.FC = () => {
   const navigation =

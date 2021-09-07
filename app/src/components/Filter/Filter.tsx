@@ -1,9 +1,9 @@
 import React from 'react';
 import {useContext} from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {ThemeContext} from '../context/ThemeContext';
+import {ThemeContext} from '../../context/ThemeContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {MATERIAL_ICON_SIZES} from '../constants/constants';
+import {MATERIAL_ICON_SIZES} from '../../constants/constants';
 interface IFilterProp {
   onVisibleModal: () => void;
 }

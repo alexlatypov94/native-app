@@ -2,8 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import {StyleSheet, SafeAreaView} from 'react-native';
 import {SCREENS} from '../constants/constants';
-import {AuthPage} from '../screens/AuthPage';
-import {RegistrationPage} from '../screens/RegistrationPage';
+import {AuthScreen, RegistrationScreen} from '../screens';
 
 const Stack = createStackNavigator();
 
@@ -11,8 +10,8 @@ export const AuthStack: React.FC = () => {
   return (
     <SafeAreaView style={styles.wrapper}>
       <Stack.Navigator initialRouteName={SCREENS.auth}>
-        <Stack.Screen name={SCREENS.auth} component={AuthPage} />
-        <Stack.Screen name={SCREENS.signup} component={RegistrationPage} />
+        <Stack.Screen name={SCREENS.auth} component={AuthScreen} />
+        <Stack.Screen name={SCREENS.signup} component={RegistrationScreen} />
       </Stack.Navigator>
     </SafeAreaView>
   );

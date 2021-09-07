@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Dimensions, StyleSheet, Text, View, Switch} from 'react-native';
-import {ThemeContext} from '../context/ThemeContext';
+import {ThemeContext} from '../../context/ThemeContext';
 
 export const SettingsScreen: React.FC = () => {
   const {colors, isDark, setColorScheme} = useContext(ThemeContext);
