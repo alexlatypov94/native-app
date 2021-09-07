@@ -10,9 +10,9 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {Provider} from 'react-redux';
-import {persistor, store} from './store';
-import AppRoot from './components/AppRoot';
+import {persistor, store} from './src/store';
 import {PersistGate} from 'redux-persist/integration/react';
+import {AppRoot} from './src/navigator';
 
 const App = () => {
   return (
