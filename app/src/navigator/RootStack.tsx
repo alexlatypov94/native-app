@@ -21,6 +21,7 @@ import {
   SelectedPhotoScreen,
   SettingsScreen,
   StartScreen,
+  UserInfoFormScreen,
 } from '../screens';
 
 const Tab = createBottomTabNavigator();
@@ -77,13 +78,21 @@ export const RootStack: React.FC = () => {
   const StackScreensOptions = {
     start: {tabBarIcon: homeIcon},
     dispatcher: {headerShown: false, tabBarIcon: galeryIcon},
-    profile: {title: HEADER_TITLES.myProfile, tabBarIcon: profileIcon},
+    profile: {
+      title: HEADER_TITLES.myProfile,
+      tabBarIcon: profileIcon,
+      unmountOnBlur: true,
+    },
     settings: {tabBarIcon: settingsIcon},
     selectedPhoto: {headerShown: false, tabBarItemStyle: {display: 'none'}},
     likedPhoto: {
       title: HEADER_TITLES.likedPhotos,
       tabBarItemStyle: {display: 'none'},
       unmountOnBlur: true,
+    },
+    userInfo: {
+      title: HEADER_TITLES.fillInfo,
+      tabBarItemStyle: {display: 'none'},
     },
   };
 
@@ -127,6 +136,11 @@ export const RootStack: React.FC = () => {
             options={
               StackScreensOptions.likedPhoto as BottomTabNavigationOptions
             }
+          />
+          <Tab.Screen
+            name={SCREENS.infoForm}
+            component={UserInfoFormScreen}
+            options={StackScreensOptions.userInfo as BottomTabNavigationOptions}
           />
         </Tab.Navigator>
       </View>

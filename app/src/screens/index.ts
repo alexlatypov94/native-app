@@ -6,3 +6,4 @@ export * from './RegistrationScreen';
 export * from './SelectedPhotoScreen';
 export * from './SettingsScreen';
 export * from './StartScreen';
+export * from './UserInfoFormScreen';

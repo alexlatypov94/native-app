@@ -7,10 +7,17 @@ export function startAuth(id: string) {
   };
 }
 
-export function authSuccess(name: string, surname: string) {
+export function authSuccess(
+  name: string,
+  surname: string,
+  age: string = '',
+  biography: string = '',
+  gender: string = '',
+  avatarUrl: string = '',
+) {
   return {
     type: AuthActionTypes.AUTHORIZATION_SUCCESS,
-    payload: {name, surname},
+    payload: {name, surname, age, biography, gender, avatarUrl},
   };
 }
 

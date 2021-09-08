@@ -4,6 +4,10 @@ export interface IAuthState {
   id: string;
   name: string;
   surname: string;
+  age: string;
+  biography: string;
+  gender: string;
+  avatarUrl: string;
 }
 
 export enum AuthActionTypes {

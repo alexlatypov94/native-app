@@ -6,6 +6,10 @@ const initialState: IAuthState = {
   id: '',
   name: '',
   surname: '',
+  age: '',
+  biography: '',
+  gender: '',
+  avatarUrl: '',
 };
 
 const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
@@ -18,6 +22,10 @@ const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
         isAuth: true,
         name: action.payload.name,
         surname: action.payload.surname,
+        age: action.payload.age,
+        biography: action.payload.biography,
+        gender: action.payload.gender,
+        avatarUrl: action.payload.avatarUrl,
       };
     case AuthActionTypes.AUTHORIZATION_FAILURE:
       return {...state, isAuth: false};

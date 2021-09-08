@@ -1,3 +1,4 @@
+import {getImageUrlFromDb} from './../../utils/getImageUrlFromDB';
 import {AuthActionTypes, IAuthAction} from '../reducer/authReducer/types';
 import {call, put, takeEvery} from 'redux-saga/effects';
 import {checkUserInDB} from '../../utils/checkUserInDB';
@@ -9,8 +10,14 @@ export function* authWatcher() {
 
 function* authWorker(action: IAuthAction) {
   try {
-    const {name, surname} = yield call(checkUserInDB, action.payload.id);
-    yield put(authSuccess(name, surname));
+    const {name, surname, age, biography, gender} = yield call(
+      checkUserInDB,
+      action.payload.id,
+    );
+
+    const avatarUrl: string = yield call(getImageUrlFromDb, action.payload.id);
+
+    yield put(authSuccess(name, surname, age, biography, gender, avatarUrl));
   } catch (error) {
     console.log(error);
     yield put(authFailure());

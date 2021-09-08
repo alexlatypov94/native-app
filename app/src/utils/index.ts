@@ -10,3 +10,6 @@ export * from './removePhotoFromDatabase';
 export * from './checkUserInDB';
 export * from './splitPhotoArray';
 export * from './getPhotoFromDatabase';
+export * from './addUserInfoToDB';
+export * from './addImagetoFirebaseStorage';
+export * from './getImageUrlFromDB';

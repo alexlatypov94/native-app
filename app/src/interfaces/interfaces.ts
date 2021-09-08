@@ -140,9 +140,45 @@ export type UserDrawerParamsList = {
   [SCREENS.dispatcherScreen]: undefined;
   [SCREENS.auth]: undefined;
   [SCREENS.signup]: undefined;
+  [SCREENS.infoForm]: undefined;
 };
 
 export interface IUserInfoDB {
   name: string;
   surname: string;
+}
+
+export type FormUserOtherData = {
+  age: string;
+  biography: string;
+  gender: string;
+};
+
+export type FormDataReg = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  confirm: string;
+};
+
+export type FormDataAuth = {
+  email: string;
+  password: string;
+};
+
+export interface IRenderType {
+  field: {
+    onChange: () => void;
+    value: string;
+    onBlur: () => void;
+  };
+}
+export interface IRenderTypeAuthReg {
+  field: {
+    onChange: () => void;
+    value: string;
+    onBlur: () => void;
+    name: string;
+  };
 }
