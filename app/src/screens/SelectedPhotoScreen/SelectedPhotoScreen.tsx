@@ -6,8 +6,8 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
 import {ThemeContext} from '../../context/ThemeContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,18 +16,14 @@ import {
   COLORS,
   ICONS_NAME,
   MATERIAL_ICON_SIZES,
-  SCREENS,
 } from '../../constants/constants';
-import {IApiData, UserDrawerParamsList} from '../../interfaces/interfaces';
+import {IApiData} from '../../interfaces/interfaces';
 import {IAppState} from '../../store/types';
 import {addLikedPhoto} from '../../store/action/likedPhotoActions';
 import {addPhotoToDataBase, removePhotoFromDatabase} from '../../utils';
 import {styles} from './styles';
-
-type Props = NativeStackScreenProps<
-  UserDrawerParamsList,
-  SCREENS.selectedPhoto
->;
+import {returnToReg} from '../../store/action/authAction';
+import {Props} from './types';
 
 export const SelectedPhotoScreen: React.FC<Props> = React.memo(
   ({route}: Props) => {
@@ -45,7 +41,9 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
       height: Dimensions.get('window').height / 2,
     };
 
-    const {id} = useSelector((store: IAppState) => store.authReducer);
+    const {id, isAuthWithoutReg} = useSelector(
+      (store: IAppState) => store.authReducer,
+    );
 
     const storage = useSelector(
       (store: IAppState) => store.likedPhotoReducer.likedPhotoData,
@@ -57,6 +55,10 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
 
     const dispatch = useDispatch();
 
+    const handleGoAuth = () => {
+      dispatch(returnToReg());
+    };
+
     const addOrRemovePhotoInDB = (isTouch: boolean) => {
       if (isTouch) {
         addPhotoToDataBase({...photoData, liked_by_user: isTouch}, id);
@@ -66,6 +68,19 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
     };
 
     const handleTouch = () => {
+      if (isAuthWithoutReg) {
+        return Alert.alert(
+          'Achtung',
+          "You can't do this until you are logged in",
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {text: 'Log in', onPress: handleGoAuth},
+          ],
+        );
+      }
       setIsTouchable(!isTouchable);
       addOrRemovePhotoInDB(!isTouchable);
       dispatch(addLikedPhoto(photoData as IApiData, !isTouchable));

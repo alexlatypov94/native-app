@@ -1,20 +1,13 @@
 import React, {useEffect} from 'react';
 import {Text, View} from 'react-native';
-import {UserDrawerParamsList} from '../../interfaces/interfaces';
-import {SCREENS} from '../../constants/constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addSearchValue,
   onClearPhotoData,
 } from '../../store/action/photosAction';
 import {IAppState} from '../../store/types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {PhotoList} from '../../components';
-
-type Props = NativeStackScreenProps<
-  UserDrawerParamsList,
-  SCREENS.photos | SCREENS.topPhotos | SCREENS.newPhotos
->;
+import {Props} from './types';
 
 export const PhotoScreen: React.FC<Props> = ({route}: Props) => {
   const {isError} = useSelector((state: IAppState) => state.photosReducer);

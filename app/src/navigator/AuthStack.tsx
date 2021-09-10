@@ -1,5 +1,5 @@
-import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
 import {StyleSheet, SafeAreaView} from 'react-native';
 import {SCREENS} from '../constants/constants';
 import {AuthScreen, RegistrationScreen} from '../screens';
@@ -7,6 +7,7 @@ import {AuthScreen, RegistrationScreen} from '../screens';
 const Stack = createStackNavigator();
 
 export const AuthStack: React.FC = () => {
+  console.log('called');
   return (
     <SafeAreaView style={styles.wrapper}>
       <Stack.Navigator initialRouteName={SCREENS.auth}>
@@ -20,8 +21,5 @@ export const AuthStack: React.FC = () => {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-  },
-  main: {
-    flex: 15,
   },
 });

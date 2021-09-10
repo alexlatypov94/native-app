@@ -1,5 +1,10 @@
-import React, {useContext} from 'react';
-import {StyleSheet, View, SafeAreaView} from 'react-native';
+import React, {useContext, useEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {
   COLORS,
   HEADER_TITLES,
@@ -23,11 +28,23 @@ import {
   StartScreen,
   UserInfoFormScreen,
 } from '../screens';
+import {useSelector} from 'react-redux';
+import {IAppState} from '../store/types';
+import {ProfileWithoutRegistr} from '../screens/ProfileWithoutRegistr';
+import {useNavigation} from '@react-navigation/core';
 
 const Tab = createBottomTabNavigator();
 
 export const RootStack: React.FC = () => {
   const {colors} = useContext(ThemeContext);
+
+  const navigate = useNavigation();
+
+  const {isAuthWithoutReg} = useSelector(
+    (store: IAppState) => store.authReducer,
+  );
+
+  const ProfileTab = isAuthWithoutReg ? ProfileWithoutRegistr : ProfileScreen;
 
   const bgColor = {backgroundColor: colors.background};
   const tintColor = colors.tintColor;
@@ -62,6 +79,19 @@ export const RootStack: React.FC = () => {
     />
   );
 
+  const goBackIcon = () => {
+    const handleGoBack = () => navigate.goBack();
+    return (
+      <TouchableWithoutFeedback onPress={handleGoBack}>
+        <MaterialCommunityIcons
+          name={ICONS_NAME.arrow_left}
+          size={MATERIAL_ICON_SIZES.medium}
+          color={COLORS.white}
+        />
+      </TouchableWithoutFeedback>
+    );
+  };
+
   const screenOptions: BottomTabNavigationOptions = {
     headerTintColor: tintColor,
     tabBarStyle: bgColor,
@@ -81,10 +111,9 @@ export const RootStack: React.FC = () => {
     profile: {
       title: HEADER_TITLES.myProfile,
       tabBarIcon: profileIcon,
-      unmountOnBlur: true,
     },
     settings: {tabBarIcon: settingsIcon},
-    selectedPhoto: {headerShown: false, tabBarItemStyle: {display: 'none'}},
+    selectedPhoto: {headerLeft: goBackIcon, tabBarItemStyle: {display: 'none'}},
     likedPhoto: {
       title: HEADER_TITLES.likedPhotos,
       tabBarItemStyle: {display: 'none'},
@@ -96,11 +125,17 @@ export const RootStack: React.FC = () => {
     },
   };
 
+  const date = new Date().getMilliseconds();
+
+  useEffect(() => {
+    console.log((Date.now() - date) * 1000);
+  });
+
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.main}>
         <Tab.Navigator
-          initialRouteName={SCREENS.start}
+          initialRouteName={SCREENS.photos}
           screenOptions={screenOptions}
           backBehavior={'history'}>
           <Tab.Screen
@@ -115,7 +150,7 @@ export const RootStack: React.FC = () => {
           />
           <Tab.Screen
             name={SCREENS.profile}
-            component={ProfileScreen}
+            component={ProfileTab}
             options={StackScreensOptions.profile}
           />
           <Tab.Screen

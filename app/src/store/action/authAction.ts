@@ -45,3 +45,16 @@ export function registration(value: IUserDataValue) {
     payload: value,
   };
 }
+
+export function returnToReg() {
+  return {
+    type: AuthActionTypes.RETURN_TO_REG,
+  };
+}
+
+export function changeTheme(theme: string) {
+  return {
+    type: AuthActionTypes.CHANGE_USER_THEME,
+    payload: {theme},
+  };
+}

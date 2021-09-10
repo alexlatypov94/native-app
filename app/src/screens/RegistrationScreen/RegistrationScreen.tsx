@@ -6,7 +6,8 @@ import {registration} from '../../store/action/authAction';
 import {Controller, useForm} from 'react-hook-form';
 import {TextInputAuthOrReg} from '../../components';
 import {styles} from './styles';
-import {FormDataReg, IRenderTypeAuthReg} from '../../interfaces/interfaces';
+import {IRenderTypeAuthReg} from '../../interfaces/interfaces';
+import {FormDataReg} from './types';
 
 export const RegistrationScreen: React.FC = () => {
   const {

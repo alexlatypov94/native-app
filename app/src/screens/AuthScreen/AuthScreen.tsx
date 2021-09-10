@@ -3,7 +3,6 @@ import {Button, TouchableHighlight, View, Text} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {SCREENS, UNDERLAY_COLOR_AUTH} from '../../constants/constants';
 import {
-  FormDataAuth,
   IRenderTypeAuthReg,
   UserDrawerParamsList,
 } from '../../interfaces/interfaces';
@@ -14,6 +13,7 @@ import auth from '@react-native-firebase/auth';
 import {styles} from './styles';
 import {Controller, useForm} from 'react-hook-form';
 import {TextInputAuthOrReg} from '../../components';
+import {FormDataAuth} from './types';
 
 export const AuthScreen: React.FC = () => {
   const navigator =

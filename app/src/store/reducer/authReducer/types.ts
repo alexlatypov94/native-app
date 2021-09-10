@@ -8,6 +8,7 @@ export interface IAuthState {
   biography: string;
   gender: string;
   avatarUrl: string;
+  theme: string;
 }
 
 export enum AuthActionTypes {
@@ -18,6 +19,8 @@ export enum AuthActionTypes {
   SIGN_OUT_PROFILE = 'SIGN_OUT_PROFILE',
   REGISTRATION = 'REGISTRATION',
   SET_USER_ID = 'SET_USER_ID',
+  RETURN_TO_REG = 'RETURN_TO_REG',
+  CHANGE_USER_THEME = 'CHANGE_USER_THEME',
 }
 
 export interface IAuthAction {

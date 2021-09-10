@@ -3,7 +3,7 @@ import {Text, TouchableHighlight, View, Image} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {signOutProfile, startAuth} from '../../store/action/authAction';
 import {IAppState} from '../../store/types';
-import {DEFAULT_USER, SCREENS} from '../../constants/constants';
+import {SCREENS} from '../../constants/constants';
 import {ThemeContext} from '../../context/ThemeContext';
 import {signOut} from '../../utils/signOut';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -11,14 +11,12 @@ import {UserDrawerParamsList} from '../../interfaces/interfaces';
 import {ScrollView} from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import {styles} from './styles';
+import {UserSvg} from '../../../assets/svg';
 
 export const ProfileScreen: React.FC = () => {
   const {colors} = useContext(ThemeContext);
   const bgColor = {backgroundColor: colors.background};
   const textColor = {color: colors.text};
-  const {isAuthWithoutReg} = useSelector(
-    (state: IAppState) => state.authReducer,
-  );
 
   const navigation =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
@@ -34,9 +32,6 @@ export const ProfileScreen: React.FC = () => {
       dispatch(startAuth(user?.uid as string));
     });
   }, [dispatch]);
-
-  const userName = isAuthWithoutReg ? DEFAULT_USER.name : name;
-  const userSurname = isAuthWithoutReg ? DEFAULT_USER.surname : surname;
 
   const handleSignOut = useCallback(() => {
     signOut();
@@ -56,9 +51,13 @@ export const ProfileScreen: React.FC = () => {
   return (
     <ScrollView>
       <View style={[styles.profileWrapper, bgColor]}>
-        <Image style={styles.avatarStyles} source={imgSource} />
-        <Text style={[styles.userName, textColor]}>{userName}</Text>
-        <Text style={[styles.userName, textColor]}>{userSurname}</Text>
+        {avatarUrl ? (
+          <Image style={styles.avatarStyles} source={imgSource} />
+        ) : (
+          <UserSvg />
+        )}
+        <Text style={[styles.userName, textColor]}>{name}</Text>
+        <Text style={[styles.userName, textColor]}>{surname}</Text>
         {!!age && (
           <Text style={[styles.userName, textColor]}>{`Age: ${age}`}</Text>
         )}

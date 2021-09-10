@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   startWrapper: {
     flex: 1,
@@ -6,11 +6,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 100,
   },
   buttonTextStyle: {
     position: 'relative',

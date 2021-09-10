@@ -148,25 +148,6 @@ export interface IUserInfoDB {
   surname: string;
 }
 
-export type FormUserOtherData = {
-  age: string;
-  biography: string;
-  gender: string;
-};
-
-export type FormDataReg = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-  confirm: string;
-};
-
-export type FormDataAuth = {
-  email: string;
-  password: string;
-};
-
 export interface IRenderType {
   field: {
     onChange: () => void;

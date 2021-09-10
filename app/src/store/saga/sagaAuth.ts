@@ -17,6 +17,8 @@ function* authWorker(action: IAuthAction) {
 
     const avatarUrl: string = yield call(getImageUrlFromDb, action.payload.id);
 
+    console.log(avatarUrl);
+
     yield put(authSuccess(name, surname, age, biography, gender, avatarUrl));
   } catch (error) {
     console.log(error);

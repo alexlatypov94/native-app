@@ -8,10 +8,11 @@ import {Picker} from '@react-native-picker/picker';
 import {styles} from './styles';
 import {TextInputComponent} from '../../components';
 import {addImageToFirebaseStorage, addUserInfoToDB} from '../../utils';
-import {FormUserOtherData, IRenderType} from '../../interfaces/interfaces';
+import {IRenderType} from '../../interfaces/interfaces';
 import ImagePicker from 'react-native-customized-image-picker';
 import {useSelector} from 'react-redux';
 import {IAppState} from '../../store/types';
+import {FormUserOtherData} from './types';
 
 const schema = yup.object().shape({
   age: yup.number().positive().integer(),

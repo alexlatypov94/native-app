@@ -1,10 +1,9 @@
 import MasonryList from '@react-native-seoul/masonry-list';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {onClearPhotoData, startRequest} from '../../store/action/photosAction';
 import {IAppState} from '../../store/types';
-import {COLOR_ACTIVITY_INDICATOR} from '../../constants/constants';
 import {ThemeContext} from '../../context/ThemeContext';
 import {IApiData} from '../../interfaces/interfaces';
 import {PhotoCard} from '../PhotoCard/PhotoCard';
@@ -73,11 +72,6 @@ export const PhotoList: React.FC<IPhotoListProp> = React.memo(
           onRefresh={onRefresh}
           onMomentumScrollBegin={onMomentumScrollBegin}
         />
-        {isLoading && (
-          <View style={[styles.indicatorWrapper, bgColor]}>
-            <ActivityIndicator size="large" color={COLOR_ACTIVITY_INDICATOR} />
-          </View>
-        )}
       </View>
     );
   },

@@ -10,6 +10,7 @@ const initialState: IAuthState = {
   biography: '',
   gender: '',
   avatarUrl: '',
+  theme: 'light',
 };
 
 const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
@@ -20,6 +21,7 @@ const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
       return {
         ...state,
         isAuth: true,
+        isAuthWithoutReg: false,
         name: action.payload.name,
         surname: action.payload.surname,
         age: action.payload.age,
@@ -39,6 +41,10 @@ const authReducer = (state: IAuthState = initialState, action: IAuthAction) => {
         name: action.payload.name,
         surname: action.payload.surname,
       };
+    case AuthActionTypes.RETURN_TO_REG:
+      return {...state, isAuthWithoutReg: false, isAuth: false};
+    case AuthActionTypes.CHANGE_USER_THEME:
+      return {...state, theme: action.payload.theme};
     default:
       return state;
   }

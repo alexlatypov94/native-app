@@ -1,10 +1,10 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 
 export const styles = StyleSheet.create({
   profileWrapper: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    height: Dimensions.get('window').height,
   },
   userName: {
     fontSize: 24,

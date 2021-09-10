@@ -94,4 +94,5 @@ export const ICONS_NAME = {
   image: 'image-outline',
   account: 'account',
   settings: 'cog-outline',
+  arrow_left: 'arrow-left',
 };
