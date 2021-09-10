@@ -8,30 +8,17 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import React, {useEffect, useState} from 'react';
-import {Appearance} from 'react-native';
+import React, {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {DARK_COLORS, LIGHT_COLORS, ThemeContext} from '../context/ThemeContext';
 import {IAppState} from '../store/types';
 import {RootStack} from './RootStack';
-import {AuthStack} from './AuthStack';
-import {startAuth} from '../store/action/authAction';
-import auth from '@react-native-firebase/auth';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 export const AppRoot = () => {
-  const colorScheme = Appearance.getColorScheme();
-  const [isDark, setIsDark] = useState<boolean>(colorScheme === 'dark');
-
-  const {isAuth} = useSelector((state: IAppState) => state.authReducer);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    auth().onAuthStateChanged(user => {
-      dispatch(startAuth(user?.uid as string));
-    });
-  }, [dispatch]);
+  const {theme} = useSelector((state: IAppState) => state.authReducer);
+  const [isDark, setIsDark] = useState<boolean>(theme === 'dark');
 
   const defaultTheme = {
     isDark,
@@ -41,9 +28,11 @@ export const AppRoot = () => {
 
   return (
     <ThemeContext.Provider value={defaultTheme}>
-      <NavigationContainer>
-        {isAuth ? <RootStack /> : <AuthStack />}
-      </NavigationContainer>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </SafeAreaProvider>
     </ThemeContext.Provider>
   );
 };

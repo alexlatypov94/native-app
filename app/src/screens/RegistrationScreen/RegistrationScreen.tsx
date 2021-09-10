@@ -1,99 +1,106 @@
 import React, {useState} from 'react';
-import {
-  Button,
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TextInput,
-} from 'react-native';
-import {useInput} from '../../hooks';
+import {Button, View, Text, ScrollView} from 'react-native';
 import {addUserToDataBase, createUser, emailValidator} from '../../utils/index';
 import {useDispatch} from 'react-redux';
 import {registration} from '../../store/action/authAction';
+import {Controller, useForm} from 'react-hook-form';
+import {TextInputAuthOrReg} from '../../components';
+import {styles} from './styles';
+import {
+  IRenderTypeAuthReg,
+  UserDrawerParamsList,
+} from '../../interfaces/interfaces';
+import {FormDataReg} from './types';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {SCREENS} from '../../constants/constants';
 
 export const RegistrationScreen: React.FC = () => {
+  const {
+    control,
+    handleSubmit,
+    formState: {isValid},
+  } = useForm<FormDataReg>({mode: 'onBlur'});
   const [inValidEmail, setInvalidEmail] = useState<boolean>(false);
-  const name = useInput('');
-  const surname = useInput('');
-  const email = useInput('');
-  const password = useInput('');
-  const confirmPassword = useInput('');
   const dispatch = useDispatch();
   const storeData = (userName: string, userSurname: string) => {
     dispatch(registration({name: userName, surname: userSurname}));
   };
 
-  const handleSignUp = () => {
-    const checkEmail = emailValidator(email.value);
-    if (checkEmail && password.value === confirmPassword.value) {
-      createUser(email.value, password.value);
-      storeData(name.value, surname.value);
-      addUserToDataBase({name: name.value, surname: surname.value});
+  const navigation =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.auth>>();
+
+  const handleSignUp = (data: FormDataReg) => {
+    const checkEmail = emailValidator(data.email);
+    if (checkEmail && data.password === data.confirm) {
+      createUser(data.email, data.password);
+      storeData(data.name, data.surname);
+      addUserToDataBase({name: data.name, surname: data.surname});
+      navigation.navigate(SCREENS.auth);
     } else {
       setInvalidEmail(true);
     }
   };
 
+  const renderInput = ({
+    field: {onChange, value, onBlur, name},
+  }: IRenderTypeAuthReg) => {
+    return (
+      <TextInputAuthOrReg
+        value={value}
+        onChangeText={onChange}
+        onBlur={onBlur}
+        placeholder={name}
+      />
+    );
+  };
+
+  const rules = {required: true};
+
   return (
     <ScrollView>
       <View style={styles.wrapper}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your name"
-          {...name}
+        <Controller
+          control={control}
+          name="name"
+          defaultValue=""
+          render={renderInput}
+          rules={rules}
         />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your surname"
-          {...surname}
+        <Controller
+          control={control}
+          name="surname"
+          defaultValue=""
+          render={renderInput}
+          rules={rules}
         />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter your E-mail"
-          autoCapitalize="none"
-          {...email}
+        <Controller
+          control={control}
+          name="email"
+          defaultValue=""
+          render={renderInput}
+          rules={rules}
         />
-        {inValidEmail && (
-          <Text style={styles.invalidEmail}>email is invalid</Text>
-        )}
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          autoCapitalize="none"
-          {...password}
+        <Controller
+          control={control}
+          name="password"
+          defaultValue=""
+          render={renderInput}
+          rules={rules}
         />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Confirm password"
-          secureTextEntry={true}
-          autoCapitalize="none"
-          {...confirmPassword}
+        <Controller
+          control={control}
+          name="confirm"
+          defaultValue=""
+          render={renderInput}
+          rules={rules}
         />
-        <Button onPress={handleSignUp} title="Sign Up" />
+        {inValidEmail && <Text style={styles.error}>*Incorrect data</Text>}
+        <Button
+          title="Sign In"
+          disabled={!isValid}
+          onPress={handleSubmit(handleSignUp)}
+        />
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 15,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textInput: {
-    width: '80%',
-    fontSize: 20,
-    color: '#000',
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-    marginBottom: 20,
-  },
-  invalidEmail: {
-    color: 'red',
-    fontSize: 18,
-  },
-});

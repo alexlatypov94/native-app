@@ -5,6 +5,6 @@ export const createUser = (email: string, password: string) => {
   try {
     auth().createUserWithEmailAndPassword(email, password);
   } catch (error) {
-    Alert.alert(error);
+    Alert.alert("User doesn't exist");
   }
 };

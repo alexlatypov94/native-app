@@ -5,6 +5,6 @@ export const signIn = (email: string, password: string) => {
   try {
     auth().signInWithEmailAndPassword(email, password);
   } catch (error) {
-    Alert.alert(error);
+    Alert.alert('Incorrect data');
   }
 };

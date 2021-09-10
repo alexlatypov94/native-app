@@ -1,12 +1,17 @@
 import React, {useContext} from 'react';
 import {Dimensions, StyleSheet, Text, View, Switch} from 'react-native';
+import {useDispatch} from 'react-redux';
 import {ThemeContext} from '../../context/ThemeContext';
+import {changeTheme} from '../../store/action/authAction';
 
 export const SettingsScreen: React.FC = () => {
   const {colors, isDark, setColorScheme} = useContext(ThemeContext);
 
+  const dispatch = useDispatch();
+
   const toggleSwitch = (isTrue: boolean) => {
     setColorScheme(isTrue ? 'dark' : 'light');
+    dispatch(changeTheme(isTrue ? 'dark' : 'light'));
   };
 
   const bgColor = {backgroundColor: colors.background};

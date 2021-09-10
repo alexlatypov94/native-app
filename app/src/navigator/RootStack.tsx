@@ -16,12 +16,16 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {DrawerNavigator} from './DrawerNavigator';
 import {
+  AuthScreen,
   LikedPhotoScreen,
   ProfileScreen,
+  RegistrationScreen,
   SelectedPhotoScreen,
   SettingsScreen,
   StartScreen,
+  UserInfoFormScreen,
 } from '../screens';
+import {GoBackButton} from '../components';
 
 const Tab = createBottomTabNavigator();
 
@@ -61,6 +65,8 @@ export const RootStack: React.FC = () => {
     />
   );
 
+  const goBackIcon = () => <GoBackButton />;
+
   const screenOptions: BottomTabNavigationOptions = {
     headerTintColor: tintColor,
     tabBarStyle: bgColor,
@@ -77,21 +83,31 @@ export const RootStack: React.FC = () => {
   const StackScreensOptions = {
     start: {tabBarIcon: homeIcon},
     dispatcher: {headerShown: false, tabBarIcon: galeryIcon},
-    profile: {title: HEADER_TITLES.myProfile, tabBarIcon: profileIcon},
+    profile: {
+      title: HEADER_TITLES.myProfile,
+      tabBarIcon: profileIcon,
+    },
     settings: {tabBarIcon: settingsIcon},
-    selectedPhoto: {headerShown: false, tabBarItemStyle: {display: 'none'}},
+    selectedPhoto: {headerLeft: goBackIcon, tabBarItemStyle: {display: 'none'}},
     likedPhoto: {
       title: HEADER_TITLES.likedPhotos,
       tabBarItemStyle: {display: 'none'},
       unmountOnBlur: true,
     },
+    userInfo: {
+      title: HEADER_TITLES.fillInfo,
+      tabBarItemStyle: {display: 'none'},
+      unmountOnBlur: true,
+    },
+    registration: {headerLeft: goBackIcon, tabBarItemStyle: {display: 'none'}},
+    authorization: {tabBarItemStyle: {display: 'none'}},
   };
 
   return (
     <SafeAreaView style={styles.wrapper}>
       <View style={styles.main}>
         <Tab.Navigator
-          initialRouteName={SCREENS.start}
+          initialRouteName={SCREENS.photos}
           screenOptions={screenOptions}
           backBehavior={'history'}>
           <Tab.Screen
@@ -126,6 +142,25 @@ export const RootStack: React.FC = () => {
             component={LikedPhotoScreen}
             options={
               StackScreensOptions.likedPhoto as BottomTabNavigationOptions
+            }
+          />
+          <Tab.Screen
+            name={SCREENS.infoForm}
+            component={UserInfoFormScreen}
+            options={StackScreensOptions.userInfo as BottomTabNavigationOptions}
+          />
+          <Tab.Screen
+            name={SCREENS.signup}
+            component={RegistrationScreen}
+            options={
+              StackScreensOptions.registration as BottomTabNavigationOptions
+            }
+          />
+          <Tab.Screen
+            name={SCREENS.auth}
+            component={AuthScreen}
+            options={
+              StackScreensOptions.authorization as BottomTabNavigationOptions
             }
           />
         </Tab.Navigator>

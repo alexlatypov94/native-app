@@ -6,8 +6,8 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
 import {ThemeContext} from '../../context/ThemeContext';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,11 +23,8 @@ import {IAppState} from '../../store/types';
 import {addLikedPhoto} from '../../store/action/likedPhotoActions';
 import {addPhotoToDataBase, removePhotoFromDatabase} from '../../utils';
 import {styles} from './styles';
-
-type Props = NativeStackScreenProps<
-  UserDrawerParamsList,
-  SCREENS.selectedPhoto
->;
+import {Props} from './types';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 
 export const SelectedPhotoScreen: React.FC<Props> = React.memo(
   ({route}: Props) => {
@@ -45,7 +42,7 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
       height: Dimensions.get('window').height / 2,
     };
 
-    const {id} = useSelector((store: IAppState) => store.authReducer);
+    const {id, isAuth} = useSelector((store: IAppState) => store.authReducer);
 
     const storage = useSelector(
       (store: IAppState) => store.likedPhotoReducer.likedPhotoData,
@@ -57,6 +54,13 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
 
     const dispatch = useDispatch();
 
+    const navigation =
+      useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.auth>>();
+
+    const handleGoAuth = () => {
+      navigation.navigate(SCREENS.auth);
+    };
+
     const addOrRemovePhotoInDB = (isTouch: boolean) => {
       if (isTouch) {
         addPhotoToDataBase({...photoData, liked_by_user: isTouch}, id);
@@ -66,6 +70,19 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
     };
 
     const handleTouch = () => {
+      if (!isAuth) {
+        return Alert.alert(
+          'Achtung',
+          "You can't do this until you are logged in",
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {text: 'Log in', onPress: handleGoAuth},
+          ],
+        );
+      }
       setIsTouchable(!isTouchable);
       addOrRemovePhotoInDB(!isTouchable);
       dispatch(addLikedPhoto(photoData as IApiData, !isTouchable));

@@ -18,6 +18,7 @@ export enum SCREENS {
   dispatcherScreen = 'DispatcherScreen',
   auth = 'Authorization',
   signup = 'Registration',
+  infoForm = 'FillUserInfo',
 }
 
 export const PHOTO_HEIGHT = {
@@ -68,6 +69,7 @@ export const HEADER_TITLES = {
   randomPhotos: 'Random Photos',
   topPhotos: 'Top Photos',
   newPhotos: 'New Photos',
+  fillInfo: 'Fill Information',
 };
 
 export const COLORS = {
@@ -92,4 +94,5 @@ export const ICONS_NAME = {
   image: 'image-outline',
   account: 'account',
   settings: 'cog-outline',
+  arrow_left: 'arrow-left',
 };

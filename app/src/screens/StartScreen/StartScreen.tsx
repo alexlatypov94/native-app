@@ -1,13 +1,6 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {
-  Text,
-  View,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  Dimensions,
-  Animated,
-} from 'react-native';
+import {Text, View, TouchableWithoutFeedback, Animated} from 'react-native';
 import {
   ANIMATION_DURATION,
   ANIMATION_SCALE_END_VALUE,
@@ -15,6 +8,7 @@ import {
 } from '../../constants/constants';
 import {ThemeContext} from '../../context/ThemeContext';
 import {UserDrawerParamsList} from '../../interfaces/interfaces';
+import {styles} from './styles';
 
 export const StartScreen: React.FC = () => {
   const navigation =
@@ -76,32 +70,3 @@ export const StartScreen: React.FC = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  startWrapper: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonStyle: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 100,
-  },
-  buttonTextStyle: {
-    position: 'relative',
-    zIndex: 1,
-    textAlign: 'center',
-    fontSize: 40,
-  },
-  roundWave: {
-    position: 'absolute',
-    zIndex: 0,
-    width: 50,
-    height: 50,
-    backgroundColor: '#595C62',
-    borderRadius: 50,
-  },
-});
