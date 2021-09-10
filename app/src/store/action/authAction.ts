@@ -1,6 +1,6 @@
 import {AuthActionTypes, IUserDataValue} from '../reducer/authReducer/types';
 
-export function startAuth(id: string) {
+export function startAuth(id: string = '') {
   return {
     type: AuthActionTypes.AUTHORIZATION,
     payload: {id},
@@ -27,12 +27,6 @@ export function authFailure() {
   };
 }
 
-export function setAuthWithoutReg() {
-  return {
-    type: AuthActionTypes.AUTH_WITHOUT_REG,
-  };
-}
-
 export function signOutProfile() {
   return {
     type: AuthActionTypes.SIGN_OUT_PROFILE,
@@ -43,12 +37,6 @@ export function registration(value: IUserDataValue) {
   return {
     type: AuthActionTypes.REGISTRATION,
     payload: value,
-  };
-}
-
-export function returnToReg() {
-  return {
-    type: AuthActionTypes.RETURN_TO_REG,
   };
 }
 

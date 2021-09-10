@@ -16,14 +16,15 @@ import {
   COLORS,
   ICONS_NAME,
   MATERIAL_ICON_SIZES,
+  SCREENS,
 } from '../../constants/constants';
-import {IApiData} from '../../interfaces/interfaces';
+import {IApiData, UserDrawerParamsList} from '../../interfaces/interfaces';
 import {IAppState} from '../../store/types';
 import {addLikedPhoto} from '../../store/action/likedPhotoActions';
 import {addPhotoToDataBase, removePhotoFromDatabase} from '../../utils';
 import {styles} from './styles';
-import {returnToReg} from '../../store/action/authAction';
 import {Props} from './types';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
 
 export const SelectedPhotoScreen: React.FC<Props> = React.memo(
   ({route}: Props) => {
@@ -41,9 +42,7 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
       height: Dimensions.get('window').height / 2,
     };
 
-    const {id, isAuthWithoutReg} = useSelector(
-      (store: IAppState) => store.authReducer,
-    );
+    const {id, isAuth} = useSelector((store: IAppState) => store.authReducer);
 
     const storage = useSelector(
       (store: IAppState) => store.likedPhotoReducer.likedPhotoData,
@@ -55,8 +54,11 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
 
     const dispatch = useDispatch();
 
+    const navigation =
+      useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.auth>>();
+
     const handleGoAuth = () => {
-      dispatch(returnToReg());
+      navigation.navigate(SCREENS.auth);
     };
 
     const addOrRemovePhotoInDB = (isTouch: boolean) => {
@@ -68,7 +70,7 @@ export const SelectedPhotoScreen: React.FC<Props> = React.memo(
     };
 
     const handleTouch = () => {
-      if (isAuthWithoutReg) {
+      if (!isAuth) {
         return Alert.alert(
           'Achtung',
           "You can't do this until you are logged in",

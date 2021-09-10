@@ -1,6 +1,6 @@
 export interface IAuthState {
   isAuth: boolean;
-  isAuthWithoutReg: boolean;
+  isLoadingAuth: boolean;
   id: string;
   name: string;
   surname: string;
@@ -19,7 +19,6 @@ export enum AuthActionTypes {
   SIGN_OUT_PROFILE = 'SIGN_OUT_PROFILE',
   REGISTRATION = 'REGISTRATION',
   SET_USER_ID = 'SET_USER_ID',
-  RETURN_TO_REG = 'RETURN_TO_REG',
   CHANGE_USER_THEME = 'CHANGE_USER_THEME',
 }
 

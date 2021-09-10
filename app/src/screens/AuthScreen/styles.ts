@@ -33,4 +33,20 @@ export const styles = StyleSheet.create({
     color: 'red',
     fontSize: 18,
   },
+
+  loadingAuth: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
+    backgroundColor: '#fff',
+    zIndex: 100,
+  },
+  signInButton: {
+    backgroundColor: '#467FFA',
+    padding: 10,
+    borderRadius: 10,
+  },
 });

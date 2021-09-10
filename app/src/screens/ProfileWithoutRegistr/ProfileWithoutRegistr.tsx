@@ -1,14 +1,16 @@
 import React from 'react';
 import {ImageBackground, Text, View, TouchableHighlight} from 'react-native';
 import {styles} from './styles';
-import {useDispatch} from 'react-redux';
-import {returnToReg} from '../../store/action/authAction';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {SCREENS} from '../../constants/constants';
+import {UserDrawerParamsList} from '../../interfaces/interfaces';
 
 export const ProfileWithoutRegistr: React.FC = () => {
-  const dispatch = useDispatch();
+  const navigation =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.auth>>();
 
   const handlePress = () => {
-    dispatch(returnToReg());
+    navigation.navigate(SCREENS.auth);
   };
 
   return (

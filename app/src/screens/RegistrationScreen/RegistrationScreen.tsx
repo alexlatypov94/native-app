@@ -6,8 +6,13 @@ import {registration} from '../../store/action/authAction';
 import {Controller, useForm} from 'react-hook-form';
 import {TextInputAuthOrReg} from '../../components';
 import {styles} from './styles';
-import {IRenderTypeAuthReg} from '../../interfaces/interfaces';
+import {
+  IRenderTypeAuthReg,
+  UserDrawerParamsList,
+} from '../../interfaces/interfaces';
 import {FormDataReg} from './types';
+import {NavigationProp, useNavigation} from '@react-navigation/core';
+import {SCREENS} from '../../constants/constants';
 
 export const RegistrationScreen: React.FC = () => {
   const {
@@ -21,12 +26,16 @@ export const RegistrationScreen: React.FC = () => {
     dispatch(registration({name: userName, surname: userSurname}));
   };
 
+  const navigation =
+    useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.auth>>();
+
   const handleSignUp = (data: FormDataReg) => {
     const checkEmail = emailValidator(data.email);
     if (checkEmail && data.password === data.confirm) {
       createUser(data.email, data.password);
       storeData(data.name, data.surname);
       addUserToDataBase({name: data.name, surname: data.surname});
+      navigation.navigate(SCREENS.auth);
     } else {
       setInvalidEmail(true);
     }

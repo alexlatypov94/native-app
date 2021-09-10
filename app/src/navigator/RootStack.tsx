@@ -1,10 +1,5 @@
-import React, {useContext, useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, View, SafeAreaView} from 'react-native';
 import {
   COLORS,
   HEADER_TITLES,
@@ -21,30 +16,21 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {DrawerNavigator} from './DrawerNavigator';
 import {
+  AuthScreen,
   LikedPhotoScreen,
   ProfileScreen,
+  RegistrationScreen,
   SelectedPhotoScreen,
   SettingsScreen,
   StartScreen,
   UserInfoFormScreen,
 } from '../screens';
-import {useSelector} from 'react-redux';
-import {IAppState} from '../store/types';
-import {ProfileWithoutRegistr} from '../screens/ProfileWithoutRegistr';
-import {useNavigation} from '@react-navigation/core';
+import {GoBackButton} from '../components';
 
 const Tab = createBottomTabNavigator();
 
 export const RootStack: React.FC = () => {
   const {colors} = useContext(ThemeContext);
-
-  const navigate = useNavigation();
-
-  const {isAuthWithoutReg} = useSelector(
-    (store: IAppState) => store.authReducer,
-  );
-
-  const ProfileTab = isAuthWithoutReg ? ProfileWithoutRegistr : ProfileScreen;
 
   const bgColor = {backgroundColor: colors.background};
   const tintColor = colors.tintColor;
@@ -79,18 +65,7 @@ export const RootStack: React.FC = () => {
     />
   );
 
-  const goBackIcon = () => {
-    const handleGoBack = () => navigate.goBack();
-    return (
-      <TouchableWithoutFeedback onPress={handleGoBack}>
-        <MaterialCommunityIcons
-          name={ICONS_NAME.arrow_left}
-          size={MATERIAL_ICON_SIZES.medium}
-          color={COLORS.white}
-        />
-      </TouchableWithoutFeedback>
-    );
-  };
+  const goBackIcon = () => <GoBackButton />;
 
   const screenOptions: BottomTabNavigationOptions = {
     headerTintColor: tintColor,
@@ -122,14 +97,11 @@ export const RootStack: React.FC = () => {
     userInfo: {
       title: HEADER_TITLES.fillInfo,
       tabBarItemStyle: {display: 'none'},
+      unmountOnBlur: true,
     },
+    registration: {headerLeft: goBackIcon, tabBarItemStyle: {display: 'none'}},
+    authorization: {tabBarItemStyle: {display: 'none'}},
   };
-
-  const date = new Date().getMilliseconds();
-
-  useEffect(() => {
-    console.log((Date.now() - date) * 1000);
-  });
 
   return (
     <SafeAreaView style={styles.wrapper}>
@@ -150,7 +122,7 @@ export const RootStack: React.FC = () => {
           />
           <Tab.Screen
             name={SCREENS.profile}
-            component={ProfileTab}
+            component={ProfileScreen}
             options={StackScreensOptions.profile}
           />
           <Tab.Screen
@@ -176,6 +148,20 @@ export const RootStack: React.FC = () => {
             name={SCREENS.infoForm}
             component={UserInfoFormScreen}
             options={StackScreensOptions.userInfo as BottomTabNavigationOptions}
+          />
+          <Tab.Screen
+            name={SCREENS.signup}
+            component={RegistrationScreen}
+            options={
+              StackScreensOptions.registration as BottomTabNavigationOptions
+            }
+          />
+          <Tab.Screen
+            name={SCREENS.auth}
+            component={AuthScreen}
+            options={
+              StackScreensOptions.authorization as BottomTabNavigationOptions
+            }
           />
         </Tab.Navigator>
       </View>

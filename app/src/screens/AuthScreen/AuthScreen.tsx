@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Button, TouchableHighlight, View, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {TouchableHighlight, View, Text, Pressable} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {SCREENS, UNDERLAY_COLOR_AUTH} from '../../constants/constants';
 import {
@@ -7,17 +7,25 @@ import {
   UserDrawerParamsList,
 } from '../../interfaces/interfaces';
 import {emailValidator, signIn} from '../../utils/index';
-import {useDispatch} from 'react-redux';
-import {startAuth, setAuthWithoutReg} from '../../store/action/authAction';
+import {useDispatch, useSelector} from 'react-redux';
+import {startAuth} from '../../store/action/authAction';
 import auth from '@react-native-firebase/auth';
 import {styles} from './styles';
 import {Controller, useForm} from 'react-hook-form';
 import {TextInputAuthOrReg} from '../../components';
 import {FormDataAuth} from './types';
+import {IAppState} from '../../store/types';
+import {PacmanIndicator} from 'react-native-indicators';
 
 export const AuthScreen: React.FC = () => {
   const navigator =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS.signup>>();
+
+  const {isAuth, isLoadingAuth} = useSelector(
+    (store: IAppState) => store.authReducer,
+  );
+
+  // console.log(isLoadingAuth);
 
   const [inValidEmail, setInValidEmail] = useState(false);
   const {
@@ -26,8 +34,13 @@ export const AuthScreen: React.FC = () => {
     formState: {isValid},
   } = useForm<FormDataAuth>({mode: 'onChange'});
 
+  useEffect(() => {
+    if (isAuth) {
+      navigator.navigate(SCREENS.profile);
+    }
+  }, [isAuth, navigator]);
+
   const dispatch = useDispatch();
-  const handleAuthWithoutReg = () => dispatch(setAuthWithoutReg());
   const handleAuth = () => {
     auth().onAuthStateChanged(user => {
       dispatch(startAuth(user?.uid as string));
@@ -80,11 +93,12 @@ export const AuthScreen: React.FC = () => {
       />
       {inValidEmail && <Text style={styles.invalidEmail}>Incorrect data</Text>}
 
-      <Button
+      <Pressable
         onPress={handleSubmit(handlePress)}
-        title="Log in"
         disabled={!isValid}
-      />
+        style={styles.signInButton}>
+        <Text>Sign In</Text>
+      </Pressable>
       <View style={styles.touchContainer}>
         <TouchableHighlight
           onPress={handleMoveReg}
@@ -95,16 +109,11 @@ export const AuthScreen: React.FC = () => {
           </View>
         </TouchableHighlight>
       </View>
-      <View style={styles.touchContainer}>
-        <TouchableHighlight
-          onPress={handleAuthWithoutReg}
-          underlayColor={UNDERLAY_COLOR_AUTH}
-          style={styles.touchRadius}>
-          <View style={styles.moveRegStyle}>
-            <Text>Continue without registration</Text>
-          </View>
-        </TouchableHighlight>
-      </View>
+      {isLoadingAuth && (
+        <View style={styles.loadingAuth}>
+          <PacmanIndicator color="red" />
+        </View>
+      )}
     </View>
   );
 };

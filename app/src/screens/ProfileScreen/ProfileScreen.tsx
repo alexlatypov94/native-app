@@ -12,6 +12,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import {styles} from './styles';
 import {UserSvg} from '../../../assets/svg';
+import {ProfileWithoutRegistr} from '../ProfileWithoutRegistr';
 
 export const ProfileScreen: React.FC = () => {
   const {colors} = useContext(ThemeContext);
@@ -21,17 +22,18 @@ export const ProfileScreen: React.FC = () => {
   const navigation =
     useNavigation<NavigationProp<UserDrawerParamsList, SCREENS>>();
 
-  const {name, surname, age, biography, gender, avatarUrl} = useSelector(
-    (store: IAppState) => store.authReducer,
-  );
+  const {name, surname, age, biography, gender, avatarUrl, id, isAuth} =
+    useSelector((store: IAppState) => store.authReducer);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    auth().onAuthStateChanged(user => {
-      dispatch(startAuth(user?.uid as string));
-    });
-  }, [dispatch]);
+    if (id) {
+      auth().onAuthStateChanged(user => {
+        dispatch(startAuth(user?.uid as string));
+      });
+    }
+  }, [dispatch, id]);
 
   const handleSignOut = useCallback(() => {
     signOut();
@@ -48,7 +50,7 @@ export const ProfileScreen: React.FC = () => {
 
   const imgSource = {uri: avatarUrl, height: 200, width: 200};
 
-  return (
+  return isAuth ? (
     <ScrollView>
       <View style={[styles.profileWrapper, bgColor]}>
         {avatarUrl ? (
@@ -91,5 +93,7 @@ export const ProfileScreen: React.FC = () => {
         </View>
       </View>
     </ScrollView>
+  ) : (
+    <ProfileWithoutRegistr />
   );
 };
